@@ -70,10 +70,10 @@ export default {
         email: this.email,
         password: this.password,
         password_confirmation: this.passwordConfirmation,
-        age: this.age,
-        summary: this.summary,
-        gender: this.gender,
-        location: this.location
+        age: this.userAge,
+        summary: this.userSummary,
+        gender: this.userGender,
+        location: this.userLocation
       };
       axios
         .post("/api/users", params)
