@@ -1,34 +1,59 @@
 <template>
   <div class="container">
-    <div> {{event.groups}} </div>
+  <!--   <div> {{event.groups}} </div> -->
     <h1>{{ event.name }}</h1>
-    <div>
-    <h1>All Groups</h1>
-      <div v-for="group in event.groups">
-      <button v-on:click="userEvent()">Show Groups</button>
-          <h2>{{ group.label }}</h2>
+    <!-- <div>{{event.user_event_by_user}}</div> -->
+      <div v-if="!event.user_event_by_user">
 
-        <div v-if="event.check_user_event">
-<!--       <img v-bind:src="photo.url"> -->
+        <p>Express interest below:</p>
+        <form v-on:submit.prevent="submit_interest()">
+
+        <div>Have you purchased tickets?</div>
+         <div class="form-group">
+            <label>Confirmation Status: </label> 
+          <select v-model="newConfirmationStatus" name="confirmation_status">
+            <option value="not_purchased">Not Purchased</option>
+            <option value="purchased">Purchased</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+           <label>Seating Quality: </label>
+          <select name="seating_quality">
+            <option value="good_seats" v-model="newSeatingQuality">Good Seats</option>
+            <option value="nosebleed" v-model="newSeatingQuality">Nosebleed</option>
+          </select>
+        </div>
+
+          <input type="submit" class="btn btn-primary" value="I'm interested!">
+        </form>
+      </div>
+
+    <h2>All Groups</h2>
+      <div v-if="event.user_event_by_user">
+      <!-- <button v-on:click="userEvent()">Show Groups</button> -->
+        <div v-for="group in event.groups">
           <div>
+            <h2>{{ group.label }}</h2>
             <p>Size: {{ group.size }}</p>
             <p>Location: {{ group.location }}</p>
           </div>
-          <div>
-            <p>New Group</p>
-            <form v-on:submit.prevent="submit()">
-              <p>Label: <input type="text" v-model="newGroupLabel"></p>
-              <p>Size: <input type="text" v-model="newGroupSize"></p>
-              <p>Seating Quality: <input type="text" v-model="newGroupSeatingQuality"></p>
-              <p>Open: <input type="text" v-model="newGroupOpen"></p>
-              <p>Meeting Time <input type="text" v-model="newGroupMeetBefore"></p>
-              <p>Drinks? <input type="text" v-model="newGroupDrinkLevel"></p>
-              <p>Gender Preference <input type="text" v-model="newGroupGenderPreference"></p>
-              <input type="submit" value="Create Group" class="btn btn-warning">
-              <!-- <button v-on:click="createGroup()">Create Group</button> -->
-            </form>
-          </div>
         </div>
+      </div>
+      <div v-if="event.user_event_by_user">
+
+        <p>Or...create a new group!</p>
+        <form v-on:submit.prevent="submit()">
+          <p>Label: <input type="text" v-model="newGroupLabel"></p>
+          <p>Size: <input type="text" v-model="newGroupSize"></p>
+          <p>Seating Quality: <input type="text" v-model="newGroupSeatingQuality"></p>
+          <p>Open: <input type="text" v-model="newGroupOpen"></p>
+          <p>Meeting Time <input type="text" v-model="newGroupMeetBefore"></p>
+          <p>Drinks? <input type="text" v-model="newGroupDrinkLevel"></p>
+          <p>Gender Preference <input type="text" v-model="newGroupGenderPreference"></p>
+          <input type="submit" value="Create Group" class="btn btn-warning">
+          <!-- <button v-on:click="createGroup()">Create Group</button> -->
+        </form>
       </div>
     </div>
   </div>
@@ -45,7 +70,7 @@ export default {
               date: "",
               category: "",
               location: "", 
-              check_user_event: "",
+    
               groups: [
                       {
                         id: "",
@@ -61,17 +86,21 @@ export default {
                         },
                         creater_id: ""
                       }
-                      ]
+                      ],
+              user_event_by_user: {},
               },
-      user_events: [],
-      user_event_checker: "",
+      user_event_checker: false,
       newGroupSize: "",
       newGroupSeatingQuality: "",
       newGroupOpen: "",
       newGroupLabel: "",
       newGroupMeetBefore: "",
       newGroupDrinkLevel: "",
-      newGroupGenderPreference: ""
+      newGroupGenderPreference: "",
+
+      newConfirmationStatus: "",
+      newSeatingQuality: ""
+
     };
   },
   created: function() {
@@ -80,24 +109,22 @@ export default {
       this.event = response.data;
     });
 
-    //   axios.get("/api/user_events/")
-    //   .then(response => {
-    //     console.log(response.data);
-    //   this.user_events = response.data;
-    // });
-
 
   },
   methods: {
     submit: function() {
+
+      var user_id = localStorage.getItem("user_id");
       var params = {
         size: this.newGroupSize,
+        event_id: this.event.id,
         seating_quality: this.newGroupSeatingQuality,
         open: this.newGroupOpen,
         label: this.newGroupLabel,
         meet_before: this.newGroupMeetBefore,
         drink_level: this.newGroupDrinkLevel,
-        gender_preference: this.newGroupGenderPreference
+        gender_preference: this.newGroupGenderPreference,
+        creater_id: user_id
       };
       axios.post("/api/groups", params)
         .then(response => {
@@ -105,21 +132,34 @@ export default {
         }).catch(error => {
           this.errors = error.response.data.errors;
         });
-        // this.newPhotoName = "";
-        // this.newPhotoWidth = "";
-        // this.newPhotoHeight = "";
-      // });
     },
+      submit_interest: function() {
+        var params = {
+          user_id: this.user_id,
+          event_id: this.event.id,
+          confirmation_status: this.newConfirmationStatus,
+          seating_quality: this.newSeatingQuality
+          };
+
+          axios.post("/api/user_events", params)
+            .then(response => {
+              console.log(response.data);
+              this.event.user_event_by_user = response.data;
+
+            }).catch(error => {
+              this.errors = error.response.data.errors;
+            });
+          }
+
 
     // userEvent: function() {
-    //   var identity = this.event.id
-    //   console.log(identity);
-    //   this.user_events.forEach(function(element) {
-    //     console.log(element);
+    //   var identity = this.event.id;
+    //   this.user_events.forEach(element => {
     //     if (element.event_id === identity) {
     //       this.user_event_checker = true;
     //     }
     //   });
+    //   return this.user_event_checker;
     // }
 
     // showGroup: function(photo) {
@@ -128,7 +168,6 @@ export default {
     //   } else {
     //     this.currentPhoto = photo;
     //   }
-    // }
-  }
+    }
 };
 </script>
