@@ -1,22 +1,33 @@
 <template>
   <div class="container">
+    <div> {{event.groups}} </div>
     <h1>{{ event.name }}</h1>
     <div>
-    <!--   Name: <input type="text" v-model="newPhotoName">
-      Date: <input type="text" v-model="newPhotoWidth">
-      Category: <input type="text" v-model="newPhotoHeight">
-      <button v-on:click="createPhoto()">Create Photo</button> -->
-    
-
-
     <h1>All Groups</h1>
       <div v-for="group in event.groups">
       <button v-on:click="userEvent()">Show Groups</button>
           <h2>{{ group.label }}</h2>
-        <div v-if="user_event_checker">
+
+        <div v-if="event.check_user_event">
 <!--       <img v-bind:src="photo.url"> -->
-          <p>Size: {{ group.size }}</p>
-          <p>Location: {{ group.location }}</p>
+          <div>
+            <p>Size: {{ group.size }}</p>
+            <p>Location: {{ group.location }}</p>
+          </div>
+          <div>
+            <p>New Group</p>
+            <form v-on:submit.prevent="submit()">
+              <p>Label: <input type="text" v-model="newGroupLabel"></p>
+              <p>Size: <input type="text" v-model="newGroupSize"></p>
+              <p>Seating Quality: <input type="text" v-model="newGroupSeatingQuality"></p>
+              <p>Open: <input type="text" v-model="newGroupOpen"></p>
+              <p>Meeting Time <input type="text" v-model="newGroupMeetBefore"></p>
+              <p>Drinks? <input type="text" v-model="newGroupDrinkLevel"></p>
+              <p>Gender Preference <input type="text" v-model="newGroupGenderPreference"></p>
+              <input type="submit" value="Create Group" class="btn btn-warning">
+              <!-- <button v-on:click="createGroup()">Create Group</button> -->
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -34,6 +45,7 @@ export default {
               date: "",
               category: "",
               location: "", 
+              check_user_event: "",
               groups: [
                       {
                         id: "",
@@ -52,7 +64,14 @@ export default {
                       ]
               },
       user_events: [],
-      user_event_checker: ""
+      user_event_checker: "",
+      newGroupSize: "",
+      newGroupSeatingQuality: "",
+      newGroupOpen: "",
+      newGroupLabel: "",
+      newGroupMeetBefore: "",
+      newGroupDrinkLevel: "",
+      newGroupGenderPreference: ""
     };
   },
   created: function() {
@@ -61,39 +80,47 @@ export default {
       this.event = response.data;
     });
 
-      axios.get("/api/user_events/")
-      .then(response => {
-        console.log(response.data);
-      this.user_events = response.data;
-    });
+    //   axios.get("/api/user_events/")
+    //   .then(response => {
+    //     console.log(response.data);
+    //   this.user_events = response.data;
+    // });
 
 
   },
   methods: {
-    // createPhoto: function() {
-    //   var params = {
-    //     name: this.newPhotoName,
-    //     width: this.newPhotoWidth,
-    //     height: this.newPhotoHeight
-    //   };
-    //   axios.post("/api/photos", params).then(response => {
-    //     this.photos.push(response.data);
-    //     this.newPhotoName = "";
-    //     this.newPhotoWidth = "";
-    //     this.newPhotoHeight = "";
-    //   });
-    // },
+    submit: function() {
+      var params = {
+        size: this.newGroupSize,
+        seating_quality: this.newGroupSeatingQuality,
+        open: this.newGroupOpen,
+        label: this.newGroupLabel,
+        meet_before: this.newGroupMeetBefore,
+        drink_level: this.newGroupDrinkLevel,
+        gender_preference: this.newGroupGenderPreference
+      };
+      axios.post("/api/groups", params)
+        .then(response => {
+        this.event.groups.push(response.data);
+        }).catch(error => {
+          this.errors = error.response.data.errors;
+        });
+        // this.newPhotoName = "";
+        // this.newPhotoWidth = "";
+        // this.newPhotoHeight = "";
+      // });
+    },
 
-    userEvent: function() {
-      var identity = this.event.id
-      console.log(identity);
-      this.user_events.forEach(function(element) {
-        console.log(element);
-        if (element.event_id === identity) {
-          this.user_event_checker = true;
-        }
-      });
-    }
+    // userEvent: function() {
+    //   var identity = this.event.id
+    //   console.log(identity);
+    //   this.user_events.forEach(function(element) {
+    //     console.log(element);
+    //     if (element.event_id === identity) {
+    //       this.user_event_checker = true;
+    //     }
+    //   });
+    // }
 
     // showGroup: function(photo) {
     //   if (this.currentPhoto === photo) {
