@@ -7,6 +7,7 @@ import Logout from './views/Logout.vue'
 import UsersEdit from './views/UsersEdit.vue'
 import EventsIndex from './views/EventsIndex.vue'
 import EventsShow from './views/EventsShow.vue'
+import GroupsShow from './views/GroupsShow.vue'
 
 Vue.use(Router)
 
@@ -19,7 +20,8 @@ export default new Router({
     { path: "/login", name: "login", component: Login },
     { path: "/logout", name: "logout", component: Logout },
     { path: "/users/:id/edit", name: "users-edit", component: UsersEdit },
-    { path: "/events/:id", name: "events-show", component: EventsShow }
+    { path: "/events/:id", name: "events-show", component: EventsShow },
+    { path: "/groups/:id", name: "groups-show", component: GroupsShow }
     // { path: "/events", name: "events-index", component: EventsIndex }
 
 

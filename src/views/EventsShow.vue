@@ -1,7 +1,10 @@
 <template>
   <div class="container">
   <!--   <div> {{event.groups}} </div> -->
-    <h1>{{ event.name }}</h1>
+    <h2>{{ event.name }}</h2>
+    <p>Date: {{ event.date }}</p>
+    <p>Category: {{ event.category }}</p>
+    <p>Location: {{ event.location }}</p>
     <!-- <div>{{event.user_event_by_user}}</div> -->
       <div v-if="!event.user_event_by_user">
 
@@ -19,9 +22,9 @@
 
         <div class="form-group">
            <label>Seating Quality: </label>
-          <select name="seating_quality">
-            <option value="good_seats" v-model="newSeatingQuality">Good Seats</option>
-            <option value="nosebleed" v-model="newSeatingQuality">Nosebleed</option>
+          <select name="seating_quality" v-model="newSeatingQuality">
+            <option value="good_seats">Good Seats</option>
+            <option value="nosebleed">Nosebleed</option>
           </select>
         </div>
 
@@ -29,14 +32,18 @@
         </form>
       </div>
 
-    <h2>All Groups</h2>
+    <h2>Groups</h2>
       <div v-if="event.user_event_by_user">
       <!-- <button v-on:click="userEvent()">Show Groups</button> -->
         <div v-for="group in event.groups">
           <div>
-            <h2>{{ group.label }}</h2>
+            <router-link :to="'/groups/' + group.id">
+              <h2>{{ group.label }}</h2>
+            </router-link>
             <p>Size: {{ group.size }}</p>
-            <p>Location: {{ group.location }}</p>
+            <p>Meet Before?: {{ group.formatted.meet_before }}</p>
+            <p>Drink Amount: {{ group.formatted.drink_level }}</p>
+            <p>Gender Preference: {{ group.formatted.gender_preference }}</p>
           </div>
         </div>
       </div>
@@ -89,7 +96,7 @@ export default {
                       ],
               user_event_by_user: {},
               },
-      user_event_checker: false,
+  
       newGroupSize: "",
       newGroupSeatingQuality: "",
       newGroupOpen: "",
