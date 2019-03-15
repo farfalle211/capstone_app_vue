@@ -7,6 +7,14 @@
       <p>Drink Level: {{ group.formatted.drink_level }}</p>
       <p>Gender Preference: {{ group.formatted.gender_preference }}</p>
       <!-- <button v-on:click="destroyGroup()" class="btn btn-danger">Delete</button> -->
+      
+        <div v-if="!group.requested">
+          <h3>Request to Join Group</h3>
+          <button v-on:click="createRequest()">Create Request</button>
+        <!-- <div v-if="createRequest()">Request Created!</div> -->
+        </div>
+      
+
       </div>
     </div>  
   </div>
@@ -28,6 +36,7 @@ export default {
               drink_level: "",
               gender_preference: "",
               creater_id: "",
+              requested: "",
               formatted: {
                           meet_before: "",
                           drink_level: "",
@@ -45,6 +54,17 @@ export default {
     });
   },
   methods: {
+      createRequest: function() {
+          // var user_event_id_final = localStorage.getItem("user_event_id");
+          var params = {
+                        group_id: this.group.id
+                        };
+
+          axios.post("/api/requests/", params)
+          .then(response => {
+           this.group.requested = response.data;
+          });
+      }
     // destroyGroup: function() {
     //   axios.delete("/api/groups/" + this.group.id)
     //     .then(response => {

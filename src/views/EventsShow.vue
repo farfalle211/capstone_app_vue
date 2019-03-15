@@ -36,7 +36,7 @@
       <div v-if="event.user_event_by_user">
       <!-- <button v-on:click="userEvent()">Show Groups</button> -->
         <div v-for="group in event.groups">
-          <div>
+          <div v-if="group.open === true">
             <router-link :to="'/groups/' + group.id">
               <h2>{{ group.label }}</h2>
             </router-link>
@@ -54,9 +54,25 @@
           <p>Label: <input type="text" v-model="newGroupLabel"></p>
           <p>Size: <input type="text" v-model="newGroupSize"></p>
           <p>Seating Quality: <input type="text" v-model="newGroupSeatingQuality"></p>
-          <p>Open: <input type="text" v-model="newGroupOpen"></p>
-          <p>Meeting Time <input type="text" v-model="newGroupMeetBefore"></p>
-          <p>Drinks? <input type="text" v-model="newGroupDrinkLevel"></p>
+
+           <div class="form-group">
+              <label>Meet Before Options: </label> 
+            <select v-model="newGroupMeetBefore" name="confirmation_status">
+              <option value="drinks">Drinks</option>
+              <option value="dinner">Dinner</option>
+              <option value="dinner_and_drinks">Dinner and Drinks</option>
+            </select>
+          </div>
+
+           <p class="form-group">
+              <label>Drink Level: </label> 
+            <select v-model="newGroupDrinkLevel" name="confirmation_status">
+              <option value="sober">Sober</option>
+              <option value="one_to_two">One to Two</option>
+              <option value="three_or_more">Three or more</option>
+            </select>
+          </p>
+         
           <p>Gender Preference <input type="text" v-model="newGroupGenderPreference"></p>
           <input type="submit" value="Create Group" class="btn btn-warning">
           <!-- <button v-on:click="createGroup()">Create Group</button> -->
@@ -151,6 +167,7 @@ export default {
           axios.post("/api/user_events", params)
             .then(response => {
               console.log(response.data);
+              localStorage.setItem("user_event_id", response.data.id);
               this.event.user_event_by_user = response.data;
 
             }).catch(error => {
