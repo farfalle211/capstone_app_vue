@@ -24,25 +24,26 @@
         </div>
         
         <div v-if="group.requested && group.requested.confirmed === 'confirmed'">
-            Show all users here. 
+            
         </div>
 
+        <ul>
+          <li v-for="error in errors"> {{ error }} </li>
+        </ul>
 
         <div v-if="group.creater_id == user_id">
-
           Current User Requests: 
-
           <div v-for="request in group.requests">
-
-            <ol type="1">
-              <li>{{ request. }}</li>
-              <li>Tea</li>
-              <li>Milk</li>
-            </ol>
-
+              <div v-if="request.confirmed === 'pending'">
+                <li>{{ request.user }}</li>
+                <button v-on:click="confirmRequest(request.id)">Confirm Request</button>
+              </div>
+              <div v-else>
+                No Current User Requests
+              </div>
           </div>
-
         </div>
+
 
       
 
@@ -86,7 +87,8 @@ export default {
                           event_name: ""
                           }
               },
-      user_id: ""
+      user_id: "",
+      errors: []
     };
   },
   created: function() {
@@ -106,6 +108,19 @@ export default {
           axios.post("/api/requests/", params)
           .then(response => {
            this.group.requested = response.data;
+          });
+      },
+
+      confirmRequest: function(inputRequest) {
+        var params = {
+                      confirmed: "confirmed"
+                      };
+                      
+        axios.patch("/api/requests/" + inputRequest, params)
+          .then(response => {
+            this.$router.push("/groups/" + this.group.id);
+          }).catch(error => {
+            this.errors = error.response.data.errors;
           });
       },
 
