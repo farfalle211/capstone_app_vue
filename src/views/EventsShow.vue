@@ -32,7 +32,7 @@
         </form>
       </div>
 
-    <h2>Groups</h2>
+    <h2>Current Groups</h2>
       <div v-if="event.user_event_by_user">
       <!-- <button v-on:click="userEvent()">Show Groups</button> -->
         <div v-for="group in event.groups">
