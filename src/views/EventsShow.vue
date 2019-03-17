@@ -152,6 +152,7 @@ export default {
       axios.post("/api/groups", params)
         .then(response => {
         this.event.groups.push(response.data);
+        console.log(response.data);
         }).catch(error => {
           this.errors = error.response.data.errors;
         });
