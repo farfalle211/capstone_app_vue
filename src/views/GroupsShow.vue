@@ -15,6 +15,10 @@
       <!-- <button v-on:click="destroyGroup()" class="btn btn-danger">Delete</button> -->
       </div>
 
+        <!--   <ul>
+            <li v-for="error in errors"> {{ error }} </li>
+          </ul> -->
+
       <div style="flex: 1; padding: 10px 50px 70px 50px">
         <div v-if="!group.requested && (group.creater_id != user_id)">
           <h3>Request to Join Group</h3>
@@ -32,38 +36,46 @@
               </div>
           </div>
           
-          <ul>
-            <li v-for="error in errors"> {{ error }} </li>
-          </ul>
 
           <div v-if="group.creater_id == user_id">
             <h5>Current User Requests: </h5>
             <div v-for="request in group.requests">
               <div v-if="request.confirmed === 'confirmed'"></div>
-                <div v-else-if="request.confirmed === 'pending'">
-                  <li>{{ request.user_name }}</li>
+              <div v-else-if="request.confirmed === 'pending'">
+                <li>{{ request.user_name }}</li>
                   <button v-on:click="confirmRequest(request.id)">Confirm Request</button>
-                </div>
-                <div v-else>
-                  No Current User Requests
-                </div>
+              </div>
+              <div v-else>
+                No Current User Requests
+              </div>
             </div>
           </div><br>
-        
        
         <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
           <h5>Group's Current Users: </h5> 
-          <div v-for="request in group.requests">
-            <div v-if="request.confirmed === 'confirmed'">
-              {{ request.user_name }},
-              {{ request.user_age }},
-              {{ request.user_location }}
-              <div v-if="group.creater_id == user_id">
-                <button v-on:click="removeUser(request.id)">Remove User</button>
-              </div>
-            </div>
-          </div>  
+          <ol>
+            <li>
+              {{ group.creater.name }},
+              {{ group.creater.age }},
+              {{ group.creater.location }}:  
+              <h3 style="display: inline">Group Admin</h3>
+            </li>
+    
+            <div v-for="request in group.requests">
+              <li v-if="request.confirmed === 'confirmed'">
+                {{ request.user_name }},
+                {{ request.user_age }},
+                {{ request.user_location }}
+                <div v-if="group.creater_id == user_id" style="display: inline">
+                  <button v-on:click="removeUser(request.id)">Remove User</button>
+                </div>
+              </li>
+            </div>  
+          </ol>
         </div>
+
+
+
       </div>
     </div>  
   </div>
@@ -85,6 +97,16 @@ export default {
               drink_level: "",
               gender_preference: "",
               creater_id: "",
+              creater: {
+                        id: "",
+                        name: "",
+                        age: "",
+                        gender: "",
+                        summary: "",
+                        location: "",
+                        email: ""
+                        },
+              sized: "",
               requests: [
                           {
                             id: "",
@@ -136,6 +158,7 @@ export default {
       confirmRequest: function(inputRequest) {
         var params = {
                       confirmed: "confirmed"
+                      // creater_id: this.group.creater_id
                       };
                       
         axios.patch("/api/requests/" + inputRequest, params)

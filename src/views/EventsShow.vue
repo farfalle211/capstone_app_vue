@@ -57,7 +57,7 @@
 
            <div class="form-group">
               <label>Meet Before Options: </label> 
-            <select v-model="newGroupMeetBefore" name="confirmation_status">
+            <select v-model="newGroupMeetBefore" name="meet_before">
               <option value="drinks">Drinks</option>
               <option value="dinner">Dinner</option>
               <option value="dinner_and_drinks">Dinner and Drinks</option>
@@ -66,14 +66,21 @@
 
            <p class="form-group">
               <label>Drink Level: </label> 
-            <select v-model="newGroupDrinkLevel" name="confirmation_status">
+            <select v-model="newGroupDrinkLevel" name="drink_level">
               <option value="sober">Sober</option>
               <option value="one_to_two">One to Two</option>
               <option value="three_or_more">Three or more</option>
             </select>
           </p>
          
-          <p>Gender Preference <input type="text" v-model="newGroupGenderPreference"></p>
+          <p>Gender Preference: <input v-model="newGroupGenderPreference" list="gender"name="gender_list"></p>
+
+          <datalist id="gender">
+            <option value="male"></option>
+            <option value="female"></option>
+            <option value="no_preference"></option>
+          </datalist>
+
           <input type="submit" value="Create Group" class="btn btn-warning">
           <!-- <button v-on:click="createGroup()">Create Group</button> -->
         </form>
