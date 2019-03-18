@@ -1,26 +1,63 @@
 <template>
   <div class="groups-show" style="width: 80%; margin-left: 10%">
 
-    <div class="container" style="display: flex; border: 1px solid; border-radius: 4px">
+    <ul>
+      <li v-for="error in errors"> {{ error }} </li>
+    </ul>
+
+    <div class="container" style="display: flex; border: 1px solid; border-radius: 4px;">
       <div style="flex: 1; border-right: 1px solid black; padding: 10px 50px 70px 50px">
       <h4 v-if="group.creater_id == user_id">You are the Admin of this Group</h4>
       <h1>{{ group.label }}</h1>
       <router-link :to="'/events/' + group.event_id">
         <h2>{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h2>
     </router-link>
+      <p>Current Group Capacity: <p style="font-weight: bold;"> {{ group.formatted.size }}</p> </p>
       <p>Meet Before?: {{ group.formatted.meet_before }}</p>
       <p>Drink Level: {{ group.formatted.drink_level }}</p>
       <p>Gender Preference: {{ group.formatted.gender_preference }}</p>
 
-      <!-- <button v-on:click="destroyGroup()" class="btn btn-danger">Delete</button> -->
+      <div v-if="group.creater_id == user_id">
+        <h3>Edit Your Group</h3>
+        <form v-on:submit.prevent="editGroup()">
+          <p>Label: <input type="text" v-model="group.label"></p>
+          <p>Size: <input type="text" v-model="group.size"></p>
+          <p>Seating Quality: <input type="text" v-model="group.seating_quality"></p>
+
+           <div class="form-group">
+              <label>Meet Before Options: </label> 
+            <select v-model="group.meet_before" name="meet_before">
+              <option value="drinks">Drinks</option>
+              <option value="dinner">Dinner</option>
+              <option value="dinner_and_drinks">Dinner and Drinks</option>
+            </select>
+          </div>
+
+           <p class="form-group">
+              <label>Drink Level: </label> 
+            <select v-model="group.drink_level" name="drink_level">
+              <option value="sober">Sober</option>
+              <option value="one_to_two">One to Two</option>
+              <option value="three_or_more">Three or more</option>
+            </select>
+          </p>
+         
+          <p>Gender Preference: <input v-model="group.gender_preference" list="gender"></p>
+          <datalist id="gender">
+            <option value="male"></option>
+            <option value="female"></option>
+            <option value="no_preference"></option>
+          </datalist>
+
+          <input type="submit" value="Edit Group" class="btn btn-warning">
+        </form>
       </div>
 
-        <!--   <ul>
-            <li v-for="error in errors"> {{ error }} </li>
-          </ul> -->
+      <!-- <button v-on:click="destroyGroup()" class="btn btn-danger">Delete</button> -->
+    </div>
 
       <div style="flex: 1; padding: 10px 50px 70px 50px">
-        <div v-if="!group.requested && (group.creater_id != user_id)">
+        <div v-if="!group.requested && (group.creater_id != user_id) && group.open === true">
           <h3>Request to Join Group</h3>
           <button v-on:click="createRequest()">Create Request</button>
         <!-- <div v-if="createRequest()">Request Created!</div> -->
@@ -58,7 +95,7 @@
               {{ group.creater.name }},
               {{ group.creater.age }},
               {{ group.creater.location }}:  
-              <h3 style="display: inline">Group Admin</h3>
+              <h3 style="display: inline;">Group Admin</h3>
             </li>
     
             <div v-for="request in group.requests">
@@ -73,7 +110,6 @@
             </div>  
           </ol>
         </div>
-
 
 
       </div>
@@ -106,7 +142,6 @@ export default {
                         location: "",
                         email: ""
                         },
-              sized: "",
               requests: [
                           {
                             id: "",
@@ -126,6 +161,7 @@ export default {
                           meet_before: "",
                           drink_level: "",
                           gender_preference: "",
+                          size: "",
                           event_date: "",
                           event_name: ""
                           }
@@ -143,6 +179,26 @@ export default {
     });
   },
   methods: {
+
+      editGroup: function() {
+        var params = {
+                      label: this.group.label,
+                      size: this.group.size,
+                      seating_quality: this.group.seating_quality,
+                      meet_before: this.group.meet_before,
+                      drink_level: this.group.drink_level,
+                      gender_preference: this.group.gender_preference
+                      };
+
+        axios.patch("/api/groups/" + this.group.id, params)
+          .then(response => {
+            // this.$router.push("/groups/" + this.group.id);
+            this.group = response.data
+          }).catch(error => {
+            this.errors = error.response.data.errors;
+          });
+      },
+
       createRequest: function() {
           var params = {
                         group_id: this.group.id
@@ -178,11 +234,14 @@ export default {
           .then(response => {
             console.log("Success", response.data);
             this.group.requested = "";
+            axios.get("/api/groups/" + this.$route.params.id).then(response => {
+              this.group = response.data;
+            });
           });
       },
 
-      removeUser: function(inputUser) {
-        axios.delete("/api/requests/" + inputUser)
+      removeUser: function(inputRequestId) {
+        axios.delete("/api/requests/" + inputRequestId)
           .then(response => {
             console.log("Success", response.data);
             axios.get("/api/groups/" + this.$route.params.id).then(response => {

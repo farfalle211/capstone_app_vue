@@ -40,7 +40,7 @@
             <router-link :to="'/groups/' + group.id">
               <h2>{{ group.label }}</h2>
             </router-link>
-            <p>Size: {{ group.size }}</p>
+            <p>Remaining Group Capacity: {{ currentCapacity(group.formatted.size) }} </p>
             <p>Meet Before?: {{ group.formatted.meet_before }}</p>
             <p>Drink Amount: {{ group.formatted.drink_level }}</p>
             <p>Gender Preference: {{ group.formatted.gender_preference }}</p>
@@ -82,7 +82,6 @@
           </datalist>
 
           <input type="submit" value="Create Group" class="btn btn-warning">
-          <!-- <button v-on:click="createGroup()">Create Group</button> -->
         </form>
       </div>
     </div>
@@ -91,6 +90,7 @@
 
 <script>
 import axios from "axios";
+const math = require('mathjs');
 
 export default {
   data: function() {
@@ -103,18 +103,47 @@ export default {
     
               groups: [
                       {
-                        id: "",
-                        size: "", 
+                        size: "",
                         event_id: "",
                         seating_quality: "",
                         open: "",
                         label: "",
+                        meet_before: "",
+                        drink_level: "",
+                        gender_preference: "",
+                        creater_id: "",
+                        creater: {
+                                  id: "",
+                                  name: "",
+                                  age: "",
+                                  gender: "",
+                                  summary: "",
+                                  location: "",
+                                  email: ""
+                                  },
+                        requests: [
+                                    {
+                                      id: "",
+                                      confirmed: "",
+                                      user_event_id: "",
+                                      group_id: "",
+                                      user_id: "",
+                                      user_name: "",
+                                      user_age: "",
+                                      user_location: ""
+                                    }
+                                  ],
+                        requested: {
+                                    confirmed: ""
+                                    },
                         formatted: {
-                          meet_before: "",
-                          drink_level: "",
-                          gender_preference: ""
-                        },
-                        creater_id: ""
+                                    meet_before: "",
+                                    drink_level: "",
+                                    gender_preference: "",
+                                    size: "",
+                                    event_date: "",
+                                    event_name: ""
+                                    }
                       }
                       ],
               user_event_by_user: {},
@@ -122,7 +151,6 @@ export default {
   
       newGroupSize: "",
       newGroupSeatingQuality: "",
-      newGroupOpen: "",
       newGroupLabel: "",
       newGroupMeetBefore: "",
       newGroupDrinkLevel: "",
@@ -149,7 +177,6 @@ export default {
         size: this.newGroupSize,
         event_id: this.event.id,
         seating_quality: this.newGroupSeatingQuality,
-        open: this.newGroupOpen,
         label: this.newGroupLabel,
         meet_before: this.newGroupMeetBefore,
         drink_level: this.newGroupDrinkLevel,
@@ -181,7 +208,14 @@ export default {
             }).catch(error => {
               this.errors = error.response.data.errors;
             });
-          }
+          },
+
+        currentCapacity: function(input) {
+          console.log(input);
+          return math.subtract(math.fraction('1'), math.fraction(input))
+        
+
+        }
 
 
     // userEvent: function() {
