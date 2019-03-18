@@ -36,14 +36,17 @@
       <div v-if="event.user_event_by_user">
       <!-- <button v-on:click="userEvent()">Show Groups</button> -->
         <div v-for="group in event.groups">
-          <div v-if="group.open === true">
+          <div v-if="(group.open === true) || (user_id == group.creater_id) || (user_id == group.requested.confirmed === 'confirmed')">
             <router-link :to="'/groups/' + group.id">
               <h2>{{ group.label }}</h2>
             </router-link>
-            <p>Remaining Group Capacity: {{ currentCapacity(group.formatted.size) }} </p>
+            <p>Remaining Group Capacity: {{ group.formatted.size }} </p>
             <p>Meet Before?: {{ group.formatted.meet_before }}</p>
             <p>Drink Amount: {{ group.formatted.drink_level }}</p>
             <p>Gender Preference: {{ group.formatted.gender_preference }}</p>
+          </div>
+          <div else>
+            
           </div>
         </div>
       </div>
@@ -155,13 +158,14 @@ export default {
       newGroupMeetBefore: "",
       newGroupDrinkLevel: "",
       newGroupGenderPreference: "",
-
       newConfirmationStatus: "",
-      newSeatingQuality: ""
+      newSeatingQuality: "",
+      user_id: ""
 
     };
   },
   created: function() {
+      this.user_id = localStorage.getItem("user_id");
       axios.get("/api/events/" + this.$route.params.id)
       .then(response => {
       this.event = response.data;

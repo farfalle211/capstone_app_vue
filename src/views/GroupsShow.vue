@@ -74,7 +74,7 @@
           </div>
           
 
-          <div v-if="group.creater_id == user_id">
+          <div v-if="(group.creater_id == user_id) && group.open === true">
             <h5>Current User Requests: </h5>
             <div v-for="request in group.requests">
               <div v-if="request.confirmed === 'confirmed'"></div>
