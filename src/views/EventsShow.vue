@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="events-show">
   <!--   <div> {{event.groups}} </div> -->
     <h2>{{ event.name }}</h2>
     <p>Date: {{ event.date }}</p>
@@ -36,7 +36,7 @@
       <div v-if="event.user_event_by_user">
       <!-- <button v-on:click="userEvent()">Show Groups</button> -->
         <div v-for="group in event.groups">
-          <div v-if="(group.open === true) || (user_id == group.creater_id) || (user_id == group.requested.confirmed === 'confirmed')">
+          <div v-if="(group.open === true) || (user_id == group.creater_id) || (group.requested) && (group.requested.confirmed === 'confirmed')">
             <router-link :to="'/groups/' + group.id">
               <h2>{{ group.label }}</h2>
             </router-link>
@@ -90,6 +90,18 @@
     </div>
   </div>
 </template>
+
+<style>
+  .events-show {
+    color: black;
+  }
+
+  h2 {
+    color: black;
+  }
+
+
+</style>
 
 <script>
 import axios from "axios";

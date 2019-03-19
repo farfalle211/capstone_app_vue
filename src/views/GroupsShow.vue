@@ -1,121 +1,145 @@
 <template>
-  <div class="groups-show" style="width: 80%; margin-left: 10%">
+  <div class="groups-show">
 
-    <ul>
-      <li v-for="error in errors"> {{ error }} </li>
-    </ul>
+      <ul>
+         <li v-for="error in errors"> {{ error }} </li>
+      </ul>
 
-    <div class="container" style="display: flex; border: 1px solid; border-radius: 4px;">
-      <div style="flex: 1; border-right: 1px solid black; padding: 10px 50px 70px 50px">
-      <h4 v-if="group.creater_id == user_id">You are the Admin of this Group</h4>
-      <h1>{{ group.label }}</h1>
-      <router-link :to="'/events/' + group.event_id">
-        <h2>{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h2>
-    </router-link>
-      <p>Current Group Capacity: <p style="font-weight: bold;"> {{ group.formatted.size }}</p> </p>
-      <p>Meet Before?: {{ group.formatted.meet_before }}</p>
-      <p>Drink Level: {{ group.formatted.drink_level }}</p>
-      <p>Gender Preference: {{ group.formatted.gender_preference }}</p>
+    <div class="col-left">
+            <div class="middle">
+                <div class="inner">
+                    <section class="section section-welcome">
+                        <ul class="navigation">
+                          <li><router-link to="/">Home</router-link></li>
+                          <li><router-link to="/">Home</router-link></li>
+                          <li><router-link to="/login">Login</router-link></li>
+                          <li><router-link to="/logout">Logout</router-link></li>
+                          <li><router-link to="/signup">Signup</router-link></li>
+                        </ul>
+                        <h1>Attend</h1>
+                        <div class="counter">
+                              <h4 v-if="group.creater_id == user_id">You are the Admin of this Group</h4>
+                              <h1>{{ group.label }}</h1>
+                              <router-link :to="'/events/' + group.event_id">
+                                <h2>{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h2>
+                            </router-link>
+                              <p>Current Group Capacity: <p style="font-weight: bold;"> {{ group.formatted.size }}</p> </p>
+                              <p>Meet Before?: {{ group.formatted.meet_before }}</p>
+                              <p>Drink Level: {{ group.formatted.drink_level }}</p>
+                              <p>Gender Preference: {{ group.formatted.gender_preference }}</p>
 
-      <div v-if="group.creater_id == user_id">
-        <h3>Edit Your Group</h3>
-        <form v-on:submit.prevent="editGroup()">
-          <p>Label: <input type="text" v-model="group.label"></p>
-          <p>Size: <input type="text" v-model="group.size"></p>
-          <p>Seating Quality: <input type="text" v-model="group.seating_quality"></p>
+                              <div v-if="group.creater_id == user_id">
+                                <h3>Edit Your Group</h3>
+                                <form v-on:submit.prevent="editGroup()">
+                                  <p>Label: <input type="text" v-model="group.label"></p>
+                                  <p>Size: <input type="text" v-model="group.size"></p>
+                                  <p>Seating Quality: <input type="text" v-model="group.seating_quality"></p>
 
-           <div class="form-group">
-              <label>Meet Before Options: </label> 
-            <select v-model="group.meet_before" name="meet_before">
-              <option value="drinks">Drinks</option>
-              <option value="dinner">Dinner</option>
-              <option value="dinner_and_drinks">Dinner and Drinks</option>
-            </select>
-          </div>
+                                   <div class="form-group">
+                                      <label>Meet Before Options: </label> 
+                                    <select v-model="group.meet_before" name="meet_before">
+                                      <option value="drinks">Drinks</option>
+                                      <option value="dinner">Dinner</option>
+                                      <option value="dinner_and_drinks">Dinner and Drinks</option>
+                                    </select>
+                                  </div>
 
-           <p class="form-group">
-              <label>Drink Level: </label> 
-            <select v-model="group.drink_level" name="drink_level">
-              <option value="sober">Sober</option>
-              <option value="one_to_two">One to Two</option>
-              <option value="three_or_more">Three or more</option>
-            </select>
-          </p>
-         
-          <p>Gender Preference: <input v-model="group.gender_preference" list="gender"></p>
-          <datalist id="gender">
-            <option value="male"></option>
-            <option value="female"></option>
-            <option value="no_preference"></option>
-          </datalist>
+                                   <p class="form-group">
+                                      <label>Drink Level: </label> 
+                                    <select v-model="group.drink_level" name="drink_level">
+                                      <option value="sober">Sober</option>
+                                      <option value="one_to_two">One to Two</option>
+                                      <option value="three_or_more">Three or more</option>
+                                    </select>
+                                  </p>
+                                 
+                                  <p>Gender Preference: <input v-model="group.gender_preference" list="gender"></p>
+                                  <datalist id="gender">
+                                    <option value="male"></option>
+                                    <option value="female"></option>
+                                    <option value="no_preference"></option>
+                                  </datalist>
 
-          <input type="submit" value="Edit Group" class="btn btn-warning">
-        </form>
-      </div>
-
-      <!-- <button v-on:click="destroyGroup()" class="btn btn-danger">Delete</button> -->
-    </div>
-
-      <div style="flex: 1; padding: 10px 50px 70px 50px">
-        <div v-if="!group.requested && (group.creater_id != user_id) && group.open === true">
-          <h3>Request to Join Group</h3>
-          <button v-on:click="createRequest()">Create Request</button>
-        <!-- <div v-if="createRequest()">Request Created!</div> -->
-        </div>
-
-          <div v-if="(group.creater_id != user_id) && group.requested">
-            <h3> Group Join Status: {{ group.requested.confirmed }} </h3>
-            <div v-if="(group.requested && group.requested.confirmed === 'confirmed')">
-              <button v-on:click="destroyRequest()" class="btn btn-danger">Leave Group</button>
-            </div>
-              <div v-else>
-                <button v-on:click="destroyRequest()" class="btn btn-danger">Delete Join Request</button>
-              </div>
-          </div>
-          
-
-          <div v-if="(group.creater_id == user_id) && group.open === true">
-            <h5>Current User Requests: </h5>
-            <div v-for="request in group.requests">
-              <div v-if="request.confirmed === 'confirmed'"></div>
-              <div v-else-if="request.confirmed === 'pending'">
-                <li>{{ request.user_name }}</li>
-                  <button v-on:click="confirmRequest(request.id)">Confirm Request</button>
-              </div>
-              <div v-else>
-                No Current User Requests
-              </div>
-            </div>
-          </div><br>
-       
-        <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
-          <h5>Group's Current Users: </h5> 
-          <ol>
-            <li>
-              {{ group.creater.name }},
-              {{ group.creater.age }},
-              {{ group.creater.location }}:  
-              <h3 style="display: inline;">Group Admin</h3>
-            </li>
-    
-            <div v-for="request in group.requests">
-              <li v-if="request.confirmed === 'confirmed'">
-                {{ request.user_name }},
-                {{ request.user_age }},
-                {{ request.user_location }}
-                <div v-if="group.creater_id == user_id" style="display: inline">
-                  <button v-on:click="removeUser(request.id)">Remove User</button>
+                                  <input type="submit" value="Edit Group" class="btn btn-warning">
+                                </form>
+                              </div>
+                          </div>
+                        <!-- end div .counter -->
+                    </section>
                 </div>
-              </li>
-            </div>  
-          </ol>
-        </div>
+            </div><!-- .middle --> 
+        </div><!-- .col-left --> 
+    
+    <div class="col-right">
+        <div class="middle tab-content">                
+            <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
+                <h2>Group Request</h2>
+                
+               <div v-if="!group.requested && (group.creater_id != user_id) && group.open === true">
+                 <h3>Request to Join Group</h3>
+                 <button v-on:click="createRequest()">Create Request</button>
+               <!-- <div v-if="createRequest()">Request Created!</div> -->
+               </div>
 
+                 <div v-if="(group.creater_id != user_id) && group.requested">
+                   <h3> Group Join Status: {{ group.requested.confirmed }} </h3>
+                   <div v-if="(group.requested && group.requested.confirmed === 'confirmed')">
+                     <button v-on:click="destroyRequest()" class="btn btn-danger">Leave Group</button>
+                   </div>
+                     <div v-else>
+                       <button v-on:click="destroyRequest()" class="btn btn-danger">Delete Join Request</button>
+                     </div>
+                 </div>
+                 
 
-      </div>
-    </div>  
+                 <div v-if="(group.creater_id == user_id) && group.open === true">
+                   <h5>Current User Requests: </h5>
+                   <div v-for="request in group.requests">
+                     <div v-if="request.confirmed === 'confirmed'"></div>
+                     <div v-else-if="request.confirmed === 'pending'">
+                       <li>{{ request.user_name }}</li>
+                         <button v-on:click="confirmRequest(request.id)">Confirm Request</button>
+                     </div>
+                     <div v-else>
+                       No Current User Requests
+                     </div>
+                   </div>
+                 </div><br>
+               
+               <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
+                 <h5>Group's Current Users: </h5> 
+                 <ol>
+                   <li>
+                     {{ group.creater.name }},
+                     {{ group.creater.age }},
+                     {{ group.creater.location }}:  
+                     <h3 style="display: inline;">Group Admin</h3>
+                   </li>
+               
+                   <div v-for="request in group.requests">
+                     <li v-if="request.confirmed === 'confirmed'">
+                       {{ request.user_name }},
+                       {{ request.user_age }},
+                       {{ request.user_location }}
+                       <div v-if="group.creater_id == user_id" style="display: inline">
+                         <button v-on:click="removeUser(request.id)">Remove User</button>
+                       </div>
+                     </li>
+                   </div>  
+                 </ol>
+               </div>
+
+            </section><!-- #newsletter -->               
+        </div><!-- .middle.tab-content --> 
+    </div><!-- .col-right --> 
   </div>
 </template>
+
+<style>
+  button {
+    color: black;
+  }
+</style>
 
 <script>
 import axios from "axios";

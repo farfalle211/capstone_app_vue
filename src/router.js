@@ -8,6 +8,7 @@ import UsersEdit from './views/UsersEdit.vue'
 import EventsIndex from './views/EventsIndex.vue'
 import EventsShow from './views/EventsShow.vue'
 import GroupsShow from './views/GroupsShow.vue'
+import UsersShow from './views/UsersShow.vue'
 
 Vue.use(Router)
 
@@ -21,7 +22,9 @@ export default new Router({
     { path: "/logout", name: "logout", component: Logout },
     { path: "/users/:id/edit", name: "users-edit", component: UsersEdit },
     { path: "/events/:id", name: "events-show", component: EventsShow },
-    { path: "/groups/:id", name: "groups-show", component: GroupsShow }
+    { path: "/groups/:id", name: "groups-show", component: GroupsShow },
+    { path: "/users/:id", name: "users-show", component: UsersShow }
+
     // { path: "/events", name: "events-index", component: EventsIndex }
 
 
