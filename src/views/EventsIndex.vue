@@ -25,16 +25,19 @@
     <div class="col-right">
         <div class="middle tab-content">                
             <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
-                
+                <p>Search events by: 
+                  <!-- <input type="text" name="location" v-model=""> -->
+                </p>
                 <h2>All Events</h2>                    
                 <div class="block-list">
                     <div class="block" v-for="event in geekEvents">
-                        <i class="fa fa-laptop"></i> 
+                        <!-- <i class="fa fa-laptop"></i>  -->
                         <div class="block-content">
+
                             <router-link v-bind:to="'/events/' + event.id">
                               <h4 class="block-title">{{ event.name }}</h4>
                             </router-link>
-
+                            <button v-on:click="addEvent(event)" class="btn btn-danger">Join this event!</button>
                             <p>Date: {{ event.formatted.date }}</p>
                             <p>Category: {{ event.category }}</p>
                             <p>Location: {{ event.location }}</p>
@@ -114,7 +117,21 @@ export default {
       this.$router.push("/login");
     });
   },
-  methods: {}
+
+  methods: {
+    addEvent: function(event) {
+
+      var params = event;
+
+    axios.post("/api/events", params)
+      .then(response => {
+      this.$router.push("/events/" + response.data.id);
+      console.log(response.data);
+      }).catch(error => {
+        this.errors = error.response.data.errors;
+      });
+    }
+  }
 };
 </script>
 

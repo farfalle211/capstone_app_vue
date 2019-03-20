@@ -53,6 +53,11 @@
       <div v-if="event.user_event_by_user">
 
         <p>Or...create a new group!</p>
+
+        <ul>
+          <li v-for="error in errors">{{ error }}</li>
+        </ul>
+
         <form v-on:submit.prevent="submit()">
           <p>Label: <input type="text" v-model="newGroupLabel"></p>
           <p>Size: <input type="text" v-model="newGroupSize"></p>
@@ -172,7 +177,8 @@ export default {
       newGroupGenderPreference: "",
       newConfirmationStatus: "",
       newSeatingQuality: "",
-      user_id: ""
+      user_id: "",
+      errors: []
 
     };
   },
