@@ -25,19 +25,22 @@
     <div class="col-right">
         <div class="middle tab-content">                
             <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
-                <p>Search events by: 
-                  <!-- <input type="text" name="location" v-model=""> -->
-                </p>
+              <!--   <p>Search events by zipcode: 
+                  <form v-on:submit.prevent="editGroup()">
+                    <input type="text" name="location" v-model="searchLocationQuery">
+                    <input type="submit" value="Search" class="btn btn-warning">
+                  </form>
+                </p> -->
                 <h2>All Events</h2>                    
                 <div class="block-list">
                     <div class="block" v-for="event in geekEvents">
                         <!-- <i class="fa fa-laptop"></i>  -->
                         <div class="block-content">
 
-                            <router-link v-bind:to="'/events/' + event.id">
-                              <h4 class="block-title">{{ event.name }}</h4>
-                            </router-link>
-                            <button v-on:click="addEvent(event)" class="btn btn-danger">Join this event!</button>
+                            
+                            <h4 class="block-title">{{ event.name }}</h4>
+                            
+                            <button v-on:click="addEvent(event)" class="btn btn-danger">Go to this event!</button>
                             <p>Date: {{ event.formatted.date }}</p>
                             <p>Category: {{ event.category }}</p>
                             <p>Location: {{ event.location }}</p>

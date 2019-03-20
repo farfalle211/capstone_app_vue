@@ -18,7 +18,7 @@
                         </ul>
                         <h1>Attend</h1>
                         <div class="counter">
-                          
+                          <p>User Stats</p>
 
 
 
