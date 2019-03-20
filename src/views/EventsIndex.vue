@@ -7,6 +7,7 @@
                 <section class="section section-welcome">
                     <ul class="navigation">
                       <li><router-link to="/">Home</router-link></li>
+                      <li><router-link :to="'/users/' + user_id" >Profile</router-link></li>
                       <li><router-link to="/login">Login</router-link></li>
                       <li><router-link to="/logout">Logout</router-link></li>
                       <li><router-link to="/signup">Signup</router-link> </li>
@@ -27,14 +28,14 @@
                 
                 <h2>All Events</h2>                    
                 <div class="block-list">
-                    <div class="block" v-for="event in events">
+                    <div class="block" v-for="event in geekEvents">
                         <i class="fa fa-laptop"></i> 
                         <div class="block-content">
                             <router-link v-bind:to="'/events/' + event.id">
                               <h4 class="block-title">{{ event.name }}</h4>
                             </router-link>
 
-                            <p>Date: {{ event.date }}</p>
+                            <p>Date: {{ event.formatted.date }}</p>
                             <p>Category: {{ event.category }}</p>
                             <p>Location: {{ event.location }}</p>
                         </div>
@@ -54,9 +55,7 @@
     <!-- <div class="container"> -->
       <h1></h1>
 
-      <div v-for="event in events">
 
-      </div>
       <!-- <table>
         <thead>
           <tr>
@@ -87,15 +86,32 @@ import axios from "axios";
 export default {
   data: function() {
     return {
-      events: []
+            geekEvents: [
+                          {
+                            name: "",
+                            date: "",
+                            category: "",
+                            location: "",
+                            formatted: {
+                                          date: ""
+                                        }
+                            }
+                          ],
+            user_id: ""
     };
   },
   created: function() {
+    this.user_id = localStorage.getItem("user_id");
+
+    if (!this.user_id) {
+      this.$router.push("/login");
+    }
+
     axios.get("/api/events")
       .then(response => {
-      this.events = response.data;
+      this.geekEvents = response.data;
     }).catch(error => {
-      this.$router.push("/login")
+      this.$router.push("/login");
     });
   },
   methods: {}

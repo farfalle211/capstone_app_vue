@@ -11,7 +11,7 @@
                     <section class="section section-welcome">
                         <ul class="navigation">
                           <li><router-link to="/">Home</router-link></li>
-                          <li><router-link to="/">Home</router-link></li>
+                          <li><router-link :to="'/users/' + user_id" >Profile</router-link></li>
                           <li><router-link to="/login">Login</router-link></li>
                           <li><router-link to="/logout">Logout</router-link></li>
                           <li><router-link to="/signup">Signup</router-link></li>
@@ -97,7 +97,7 @@
                    <div v-for="request in group.requests">
                      <div v-if="request.confirmed === 'confirmed'"></div>
                      <div v-else-if="request.confirmed === 'pending'">
-                       <li>{{ request.user_name }}</li>
+                       <li>{{ request.user.name }}</li>
                          <button v-on:click="confirmRequest(request.id)">Confirm Request</button>
                      </div>
                      <div v-else>
@@ -118,9 +118,9 @@
                
                    <div v-for="request in group.requests">
                      <li v-if="request.confirmed === 'confirmed'">
-                       {{ request.user_name }},
-                       {{ request.user_age }},
-                       {{ request.user_location }}
+                       {{ request.user.name }},
+                       {{ request.user.age }},
+                       {{ request.user.location }}
                        <div v-if="group.creater_id == user_id" style="display: inline">
                          <button v-on:click="removeUser(request.id)">Remove User</button>
                        </div>
@@ -172,10 +172,12 @@ export default {
                             confirmed: "",
                             user_event_id: "",
                             group_id: "",
-                            user_id: "",
-                            user_name: "",
-                            user_age: "",
-                            user_location: ""
+                            user: {
+                                    id: "",
+                                    name: "",
+                                    age: "",
+                                    location: ""
+                                  }
                           }
                         ],
               requested: {
