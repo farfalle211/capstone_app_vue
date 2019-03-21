@@ -20,7 +20,7 @@
                         <div class="counter">
                           <p>User Stats</p>
 
-
+                          <highcharts :options="chartOptions"></highcharts>
 
 
                         </div>
@@ -172,6 +172,57 @@ export default {
                     created_groups: []
                   },
         user_id: "",
+        chartOptions: {
+                chart: {
+                    plotBackgroundColor: 'rgb(2, 174, 240)',
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                  },
+                  title: {
+                    text: 'Browser<br>shares<br>2017',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    y: 40
+                  },
+                  tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                  },
+                  plotOptions: {
+                    pie: {
+                      dataLabels: {
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                          fontWeight: 'bold',
+                          color: 'white'
+                        }
+                      },
+                      startAngle: -90,
+                      endAngle: 90,
+                      center: ['50%', '75%'],
+                      size: '110%'
+                    }
+                  },
+                  series: [{
+                    type: 'pie',
+                    name: 'Browser share',
+                    innerSize: '50%',
+                    data: [
+                      ['Chrome', 5],
+                      ['Firefox', 13.29],
+                      ['Internet Explorer', 13],
+                      ['Edge', 3.78],
+                      ['Safari', 3.42],
+                      {
+                        name: 'Other',
+                        y: 7.61,
+                        dataLabels: {
+                          enabled: false
+                        }
+                      }
+                    ]
+                  }]
+              },
         errors: []
       };
   },
