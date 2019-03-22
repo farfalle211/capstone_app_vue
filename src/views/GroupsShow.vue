@@ -129,6 +129,46 @@
                  </ol>
                </div>
 
+              <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
+              
+                <h3>Text Members in your Group!</h3>
+                  
+                <div>
+                  <div style="padding-bottom: 10px; display:inline;">
+                  Running: <input style="color: black;" type="number" v-model="numberOfMinutes"> Minutes Late!
+                  </div>
+
+                  <div style="padding-bottom: 10px">
+                  <button v-on:click="imLate()">Send!</button>
+                  </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="sr-only">Message</label>
+                    <textarea style="color: black;" v-model="userMessage" rows="4" cols="40" placeholder="Enter your message" required=""></textarea>
+                </div>
+
+                <!-- Message: <input style="color: black;" v-model="userMessage"> -->
+
+                  <div>
+                    Who would you like to send the message to?: 
+                    <select v-model="inputPhoneNumber">
+                      <option v-for="request in group.requests" v-bind:value="request.user.phone_number">{{ request.user.name }}</option>
+                      <option v-bind:value="group.creater.phone_number">{{ group.creater.name }}</option>
+                    </select>
+
+                    <button v-on:click="sendMessage('solo')">Send!</button>
+                  </div>
+
+
+                  <div>
+                    Send a message to all users:
+                    <button v-on:click="sendMessage('group')">Send!</button>
+                  </div>
+             </div>
+
+
             </section><!-- #newsletter -->               
         </div><!-- .middle.tab-content --> 
     </div><!-- .col-right --> 
@@ -176,13 +216,15 @@ export default {
                                     id: "",
                                     name: "",
                                     age: "",
-                                    location: ""
+                                    location: "",
+                                    phone_number: ""
                                   }
                           }
                         ],
               requested: {
                           confirmed: ""
                           },
+              current_user: {},
               formatted: {
                           meet_before: "",
                           drink_level: "",
@@ -193,6 +235,10 @@ export default {
                           }
               },
       user_id: "",
+      numberOfMinutes: "",
+      userMessage: "",
+      confirmedGroupMembers: [],
+      inputPhoneNumber: "",
       errors: []
     };
   },
@@ -203,6 +249,7 @@ export default {
       console.log(response.data);
       this.group = response.data;
     });
+
   },
   methods: {
 
@@ -275,6 +322,47 @@ export default {
             });
           });
       },
+
+      imLate: function() {
+        var params = {
+                        message: this.group.current_user.name + " is running " + this.numberOfMinutes + " minutes late!",
+                        group_id: this.group.id
+                      };
+
+        axios.post("api/messages/", params)
+        .then(response => {
+          console.log(response.data);
+        });
+      },
+
+      sendMessage: function(mode) {
+        var params = {
+                        message: this.userMessage,
+                        group_id: this.group.id
+                      };
+
+        if (mode === 'solo') {
+          params["phone_number"] = this.inputPhoneNumber;
+        }
+
+        axios.post("api/messages/", params)
+        .then(response => {
+          console.log(response.data);
+        });
+      }
+
+
+
+
+      // confirmedUsers: function() {
+
+      //   this.group['requests'].forEach(function(person) {
+      //     if (person.confirmed === 'confirmed') {
+      //       this.confirmedGroupMembers.push(person['user']);
+      //     }
+      //   });
+      // }
+    
     // destroyGroup: function() {
     //   axios.delete("/api/groups/" + this.group.id)
     //     .then(response => {
