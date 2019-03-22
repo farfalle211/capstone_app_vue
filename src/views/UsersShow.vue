@@ -18,6 +18,7 @@
                         </ul>
                         <h1>Attend</h1>
                         <div class="counter">
+
                           <p>User Stats</p>
 
                           <highcharts :options="chartOptions"></highcharts>
@@ -39,48 +40,60 @@
 
 
                 <div class="separator"></div>
-                <p>Edit your Profile</p>
+                
                 <div v-if="user_id == user.id">
-                  <form class="contact-form" v-on:submit.prevent="submit()">
 
-                      <div class="form-group">
-                          <label class="sr-only">Name</label>
-                          <input class="form-control" type="text" v-model="user.name">          
-                      </div>
+                  <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                      Edit Your Profile
+                    </button>
+                  </p>
+                  <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                      <form class="contact-form" v-on:submit.prevent="submit()">
 
-                      <div class="form-group">
-                          <label class="sr-only">Age</label>
-                          <input type="text" class="form-control" v-model="user.age">            
-                      </div>
+                          <div class="form-group">
+                              <label class="sr-only">Name</label>
+                              <input class="form-control" type="text" v-model="user.name">          
+                          </div>
 
-                      <div class="form-group">
-                          <label class="sr-only">Gender</label>
-                          <input type="radio" value="male" class="form-control" v-model="user.gender"> Male
-                          <input type="radio" value="female" class="form-control" v-model="user.gender"> Female
-                      </div>
+                          <div class="form-group">
+                              <label class="sr-only">Age</label>
+                              <input type="text" class="form-control" v-model="user.age">            
+                          </div>
 
-                      <div class="form-group">
-                          <label class="sr-only">Location</label>
-                          <input type="text" class="form-control" v-model="user.location">
-                      </div>
+                          <div class="form-group">
+                              <label class="sr-only">Gender</label>
+                              <label class="radio-inline">
+                                  <input type="radio" class="checkmark" value="male" v-model="user.gender" checked>Male
+                              </label>
+                              <label class="radio-inline">
+                                  <input type="radio" class="checkmark" value="female" v-model="user.gender">Female
+                              </label>
+                          </div>
 
-                      <div class="form-group">
-                          <label class="sr-only">Summary</label>
-                          <input type="text" class="form-control" v-model="user.summary">
-                      </div>
 
-                      <input type="submit" value="Update" class="btn btn-primary">
+                          <div class="form-group">
+                              <label class="sr-only">Location</label>
+                              <input type="text" class="form-control" v-model="user.location">
+                          </div>
 
-                  <!--     <div class="text-center">
-                          <button type="submit" class="btn btn-block btn-main">Submit</button>
-                      </div> -->
+                          <div class="form-group">
+                              <label class="sr-only">Summary</label>
+                              <input type="text" class="form-control" v-model="user.summary">
+                          </div>
 
-                      <div class="alert-message">
-                        <ul>
-                          <li v-for="error in errors">{{ error }}</li>
-                        </ul>
-                      </div>
-                  </form> 
+                          <input type="submit" value="Update" class="btn btn-primary">
+
+                          <div class="alert-message">
+                            <ul>
+                              <li v-for="error in errors">{{ error }}</li>
+                            </ul>
+                          </div>
+                      </form> 
+                    </div>
+
+                  </div>
                 </div>
                
 

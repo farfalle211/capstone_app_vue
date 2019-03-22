@@ -529,7 +529,7 @@ ul
     letter-spacing: 2px;
 
     color: #fff;
-    border-width: 0 0 2px 0;
+    /*border-width: 0 0 2px 0;*/
     border-style: solid;
     border-color: #02aef0;
     border-radius: 0;
