@@ -20,7 +20,7 @@
                         <div class="counter">
                               <h4 v-if="group.creater_id == user_id">You are the Admin of this Group</h4>
                               <h1>{{ group.label }}</h1>
-                              <router-link :to="'/events/' + group.event_id">
+                              <router-link style="text-decoration: underline;" :to="'/events/' + group.event_id">
                                 <h2>{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h2>
                             </router-link>
                               <p>Current Group Capacity: <p style="font-weight: bold;"> {{ group.formatted.size }}</p> </p>
@@ -62,6 +62,8 @@
 
                                   <input type="submit" value="Edit Group" class="btn btn-warning">
                                 </form>
+
+                                <button class="btn btn-warning" v-on:click="destroyGroup()">Delete Group</button>     
                               </div>
                           </div>
                         <!-- end div .counter -->
@@ -73,7 +75,6 @@
     <div class="col-right">
         <div class="middle tab-content">                
             <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
-                <h2>Group Request</h2>
                 
                <div v-if="!group.requested && (group.creater_id != user_id) && group.open === true">
                  <h3>Request to Join Group</h3>
@@ -110,17 +111,21 @@
                  <h5>Group's Current Users: </h5> 
                  <ol>
                    <li>
+                      <router-link :to="'/users/' + group.creater_id">
                      {{ group.creater.name }},
                      {{ group.creater.age }},
-                     {{ group.creater.location }}:  
-                     <h3 style="display: inline;">Group Admin</h3>
+                     {{ group.creater.location }} --
+                     </router-link> 
+                     <h4 style="display: inline;">Group Admin</h4>
                    </li>
                
                    <div v-for="request in group.requests">
                      <li v-if="request.confirmed === 'confirmed'">
-                       {{ request.user.name }},
-                       {{ request.user.age }},
-                       {{ request.user.location }}
+                      <router-link :to="'/users/' + request.user.id">
+                         {{ request.user.name }},
+                         {{ request.user.age }},
+                         {{ request.user.location }}
+                       </router-link>
                        <div v-if="group.creater_id == user_id" style="display: inline">
                          <button v-on:click="removeUser(request.id)">Remove User</button>
                        </div>
@@ -204,7 +209,8 @@ export default {
                         gender: "",
                         summary: "",
                         location: "",
-                        email: ""
+                        email: "",
+                        phone_number: ""
                         },
               requests: [
                           {
@@ -349,7 +355,7 @@ export default {
         .then(response => {
           console.log(response.data);
         });
-      }
+      },
 
 
 
@@ -363,13 +369,13 @@ export default {
       //   });
       // }
     
-    // destroyGroup: function() {
-    //   axios.delete("/api/groups/" + this.group.id)
-    //     .then(response => {
-    //       console.log("Success", response.data);
-    //       this.$router.push("/"); 
-    //     });
-    // },
+    destroyGroup: function() {
+      axios.delete("/api/groups/" + this.group.id)
+        .then(response => {
+          console.log("Success", response.data);
+          this.$router.push("/"); 
+        });
+    },
   }
 };
 </script>

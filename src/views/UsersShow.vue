@@ -18,8 +18,7 @@
                         </ul>
                         <h1>Attend</h1>
                         <div class="counter">
-
-                          <p>User Stats</p>
+                          <h2> {{ user.name }}'s Profile Page</h2>
 
                           <highcharts :options="chartOptions"></highcharts>
 
@@ -34,65 +33,71 @@
     <div class="col-right">
         <div class="middle tab-content">                
             <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
-                <h2>Profile Page</h2>
-
-
-
-
-                <div class="separator"></div>
-                
+                  <h3> {{ user.name }}'s Groups</h3>
+                    <div v-for="group in user.groups">
+                      <ol>
+                        <li style="font-size: 20px">
+                          <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
+                        </li>
+                      </ol>
+                    </div>
+                  <div v-if="user_id == user.id">
+                    <h3>Groups you are the Administrator Of</h3>
+                      <ol>
+                       <li style="font-size: 20px" v-for="group in user.created_groups">
+                        <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
+                      </li>
+                    </ol>
+                  </div>
                 <div v-if="user_id == user.id">
 
                   <p>
-                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                       Edit Your Profile
                     </button>
                   </p>
                   <div class="collapse" id="collapseExample">
                     <div class="card card-body">
                       <form class="contact-form" v-on:submit.prevent="submit()">
+                        <div class="form-group">
+                            <label class="sr-only">Name</label>
+                            <input class="form-control" type="text" v-model="user.name">          
+                        </div>
 
-                          <div class="form-group">
-                              <label class="sr-only">Name</label>
-                              <input class="form-control" type="text" v-model="user.name">          
-                          </div>
+                        <div class="form-group">
+                            <label class="sr-only">Age</label>
+                            <input type="text" class="form-control" v-model="user.age">            
+                        </div>
 
-                          <div class="form-group">
-                              <label class="sr-only">Age</label>
-                              <input type="text" class="form-control" v-model="user.age">            
-                          </div>
+                        <div class="form-group">
+                            <label class="sr-only">Gender</label>
+                            <label class="radio-inline">
+                                <input type="radio" class="checkmark" value="male" v-model="user.gender" checked>Male
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" class="checkmark" value="female" v-model="user.gender">Female
+                            </label>
+                        </div>
 
-                          <div class="form-group">
-                              <label class="sr-only">Gender</label>
-                              <label class="radio-inline">
-                                  <input type="radio" class="checkmark" value="male" v-model="user.gender" checked>Male
-                              </label>
-                              <label class="radio-inline">
-                                  <input type="radio" class="checkmark" value="female" v-model="user.gender">Female
-                              </label>
-                          </div>
+                        <div class="form-group">
+                            <label class="sr-only">Location</label>
+                            <input type="text" class="form-control" v-model="user.location">
+                        </div>
 
+                        <div class="form-group">
+                            <label class="sr-only">Summary</label>
+                            <input type="text" class="form-control" v-model="user.summary">
+                        </div>
 
-                          <div class="form-group">
-                              <label class="sr-only">Location</label>
-                              <input type="text" class="form-control" v-model="user.location">
-                          </div>
+                        <input type="submit" value="Update" class="btn btn-block btn-primary">
 
-                          <div class="form-group">
-                              <label class="sr-only">Summary</label>
-                              <input type="text" class="form-control" v-model="user.summary">
-                          </div>
-
-                          <input type="submit" value="Update" class="btn btn-primary">
-
-                          <div class="alert-message">
-                            <ul>
-                              <li v-for="error in errors">{{ error }}</li>
-                            </ul>
-                          </div>
+                        <div class="alert-message">
+                          <ul>
+                            <li v-for="error in errors">{{ error }}</li>
+                          </ul>
+                        </div>
                       </form> 
                     </div>
-
                   </div>
                 </div>
                
@@ -128,6 +133,8 @@ export default {
                             event_id: "",
                             confirmation_status: "",
                             seating_quality: "",
+                            events_attended: "",
+                            adjusted_interested_total: "",
                             formatted: {
                                         confirmation_status: ""
                                         },
@@ -172,14 +179,14 @@ export default {
                                             }
                                     }
                                     ],
-                                    formatted: {
-                                                meet_before: "",
-                                                drink_level: "",
-                                                gender_preference: "",
-                                                size: "",
-                                                event_date: "",
-                                                event_name: ""
-                                                }
+                          formatted: {
+                                      meet_before: "",
+                                      drink_level: "",
+                                      gender_preference: "",
+                                      size: "",
+                                      event_date: "",
+                                      event_name: ""
+                                      }
                             }
                             ],
                     created_groups: []
@@ -189,16 +196,20 @@ export default {
                 chart: {
                     plotBackgroundColor: 'rgb(2, 174, 240)',
                     plotBorderWidth: 0,
-                    plotShadow: false
+                    plotShadow: false,
+                    backgroundColor: null
                   },
                   title: {
-                    text: 'Browser<br>shares<br>2017',
+                    text: 'User<br>Attended<br>Stats',
                     align: 'center',
                     verticalAlign: 'middle',
                     y: 40
                   },
                   tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                  },
+                  exporting: { 
+                    enabled: false 
                   },
                   plotOptions: {
                     pie: {
@@ -218,23 +229,28 @@ export default {
                   },
                   series: [{
                     type: 'pie',
-                    name: 'Browser share',
+                    name: 'Percentage',
                     innerSize: '50%',
                     data: [
-                      ['Chrome', 5],
-                      ['Firefox', 13.29],
-                      ['Internet Explorer', 13],
-                      ['Edge', 3.78],
-                      ['Safari', 3.42],
-                      {
-                        name: 'Other',
-                        y: 7.61,
-                        dataLabels: {
-                          enabled: false
-                        }
-                      }
+                      // ['Attended', 4],
+                      // ['Firefox', 4],
+                      // ['Internet Explorer', 13],
+                      // ['Edge', 3.78],
+                      // ['Safari', 3.42],
+
+
+                      // {
+                      //   name: 'Other',
+                      //   y: 7.61,
+                        // dataLabels: {
+                        //   enabled: false
+                        // }
+                      // }
                     ]
-                  }]
+                  }],
+                  credits: {
+                       enabled: false
+                   }
               },
         errors: []
       };
@@ -245,6 +261,10 @@ export default {
     .then(response => {
       console.log(response.data);
       this.user = response.data;
+      this.chartOptions.series[0].data.push(['Attended', this.user.user_events[0].events_attended]);
+      this.chartOptions.series[0].data.push(['Not Attended', this.user.user_events[0].adjusted_interested_total]);
+
+
     });
   },
   methods: {

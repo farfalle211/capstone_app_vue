@@ -50,7 +50,7 @@
                         <input type="password" class="form-control" v-model="password" placeholder="Password*">            
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-block btn-main">Submit</button>
+                        <button type="submit" class="btn btn-main">Submit</button>
                     </div>
                     <div class="alert-message">
                       <ul>

@@ -32,12 +32,12 @@
               <form class="contact-form" id="contact-form" v-on:submit.prevent="submit()">
                   <div class="form-group">
                       <label class="sr-only" for="name">Name</label>
-                      <input type="text" class="form-control" v-model="name" placeholder="Name*">                               
+                      <input type="text" class="form-control" v-model="name" placeholder="Name*">                   
                   </div>
 
                   <div class="form-group">
                       <label class="sr-only" for="email">Your Email</label>
-                      <input type="email" id="email" v-model="email" class="form-control" placeholder="Your E-mail*">                                
+                      <input type="email" id="email" v-model="email" class="form-control" placeholder="Your E-mail*">
                   </div>
 
                   <div class="form-group">
