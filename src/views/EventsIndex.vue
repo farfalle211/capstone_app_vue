@@ -31,16 +31,15 @@
                     <input type="submit" value="Search" class="btn btn-warning">
                   </form>
                 </p> -->
-                <h2>All Events</h2>                    
+                                  
                 <div class="block-list">
                     <div class="block" v-for="event in geekEvents">
                         <!-- <i class="fa fa-laptop"></i>  -->
                         <div class="block-content">
 
                             
-                            <h4 class="block-title">{{ event.name }}</h4>
+                            <h4 style="cursor:pointer;" v-on:click="addEvent(event)" class="block-title">{{ event.name }}</h4>
                             
-                            <button v-on:click="addEvent(event)" class="btn btn-danger">Go to this event!</button>
                             <p>Date: {{ event.formatted.date }}</p>
                             <p>Category: {{ event.category }}</p>
                             <p>Location: {{ event.location }}</p>

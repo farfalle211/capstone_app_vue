@@ -23,7 +23,6 @@
 
                           <highcharts :options="chartOptions"></highcharts>
 
-
                         </div>
                         <!-- end div .counter -->
                     </section>
@@ -87,7 +86,7 @@
 
                         <div class="form-group">
                             <label class="sr-only">Phone Number</label>
-                            <input type="text" class="form-control" v-model="user.phone_number">
+                            <input type="text" class="form-control" v-model="user.phone_number" placeholder="+13042227896">
                         </div>
 
                         <div class="form-group">
@@ -207,7 +206,7 @@ export default {
                     backgroundColor: null
                   },
                   title: {
-                    text: 'User<br>Attended<br>Stats',
+                    text: 'Attended<br>Stats',
                     align: 'center',
                     verticalAlign: 'middle',
                     y: 40

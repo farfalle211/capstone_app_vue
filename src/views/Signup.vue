@@ -62,7 +62,7 @@
 
                   <div class="form-group">
                       <label class="sr-only">Age</label>
-                      <input class="form-control" v-model="userPhoneNumber" placeholder="Phone Number"></input>
+                      <input class="form-control" v-model="userPhoneNumber" placeholder="+13042229816"></input>
                   </div>
 
                   <div class="form-group">

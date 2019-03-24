@@ -28,19 +28,19 @@
                                 <div>Have you purchased tickets?</div>
                                  <div class="form-group">
                                     <label>Confirmation Status: </label> 
-                                  <select v-model="newConfirmationStatus" name="confirmation_status">
+                                  <select class="form-control" v-model="newConfirmationStatus">
                                     <option value="not_purchased">Not Purchased</option>
                                     <option value="purchased">Purchased</option>
                                   </select>
                                 </div>
 
-                                <div class="form-group">
+                               <!--  <div class="form-group">
                                    <label>Seating Quality: </label>
-                                  <select name="seating_quality" v-model="newSeatingQuality">
+                                  <select class="form-control" name="seating_quality" v-model="newSeatingQuality">
                                     <option value="good_seats">Good Seats</option>
                                     <option value="nosebleed">Nosebleed</option>
                                   </select>
-                                </div>
+                                </div> -->
 
                                   <input type="submit" class="btn btn-primary" value="I'm interested!">
                                 </form>
@@ -62,9 +62,9 @@
                                 <div class="card card-body">
                                   <form v-on:submit.prevent="submit()">
 
-                                  <p>Label: <input class="form-control" type="text" v-model="newGroupLabel"></p>
-                                  <p>Size: <input class="form-control" type="text" v-model="newGroupSize"></p>
-                                  <p>Seating Quality: <input class="form-control" type="text" v-model="newGroupSeatingQuality"></p>
+                                  <p style="font-weight: bold;">Label: <input class="form-control" type="text" v-model="newGroupLabel"></p>
+                                  <p style="font-weight: bold;">Size: <input class="form-control" type="number" v-model="newGroupSize"></p>
+                                  <!-- <p>Seating Quality: <input class="form-control" type="text" v-model="newGroupSeatingQuality"></p> -->
 
                                    <div class="form-group">
                                       <label>Meet Before Options: </label> 
