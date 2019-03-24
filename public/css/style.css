@@ -49,6 +49,8 @@ body
     color: #fff;
 
     -webkit-overflow-scrolling: touch;
+    /*-webkit-transform: translateZ(0px);*/
+    
 }
 
 h1,
@@ -169,6 +171,7 @@ ul
     padding-bottom: 20px;
 
     vertical-align: middle;
+
 }
 
 .inner

@@ -23,47 +23,51 @@
                               <router-link style="text-decoration: underline;" :to="'/events/' + group.event_id">
                                 <h2>{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h2>
                             </router-link>
-                              <p>Current Group Capacity: <p style="font-weight: bold;"> {{ group.formatted.size }}</p> </p>
-                              <p>Meet Before?: {{ group.formatted.meet_before }}</p>
+                              <p style="display: inline;">Current Group Capacity: <p style="font-weight: bold; display: inline;"> {{ group.formatted.size }}</p> </p>
+                              <p>Meeting Before For: {{ group.formatted.meet_before }}</p>
                               <p>Drink Level: {{ group.formatted.drink_level }}</p>
-                              <p>Gender Preference: {{ group.formatted.gender_preference }}</p>
 
-                              <div v-if="group.creater_id == user_id">
-                                <h3>Edit Your Group</h3>
-                                <form v-on:submit.prevent="editGroup()">
-                                  <p>Label: <input type="text" v-model="group.label"></p>
-                                  <p>Size: <input type="text" v-model="group.size"></p>
-                                  <p>Seating Quality: <input type="text" v-model="group.seating_quality"></p>
-
-                                   <div class="form-group">
-                                      <label>Meet Before Options: </label> 
-                                    <select v-model="group.meet_before" name="meet_before">
-                                      <option value="drinks">Drinks</option>
-                                      <option value="dinner">Dinner</option>
-                                      <option value="dinner_and_drinks">Dinner and Drinks</option>
-                                    </select>
-                                  </div>
-
-                                   <p class="form-group">
-                                      <label>Drink Level: </label> 
-                                    <select v-model="group.drink_level" name="drink_level">
-                                      <option value="sober">Sober</option>
-                                      <option value="one_to_two">One to Two</option>
-                                      <option value="three_or_more">Three or more</option>
-                                    </select>
+                                <div v-if="group.creater_id == user_id">
+                                  <p>
+                                    <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                      Edit Your Group!
+                                    </button>
                                   </p>
-                                 
-                                  <p>Gender Preference: <input v-model="group.gender_preference" list="gender"></p>
-                                  <datalist id="gender">
-                                    <option value="male"></option>
-                                    <option value="female"></option>
-                                    <option value="no_preference"></option>
-                                  </datalist>
+                                  <div class="collapse" id="collapseExample">
+                                    <div class="card card-body">
+                                      <form v-on:submit.prevent="editGroup()">
+                                        <p>Label: <input class="form-control" type="text" v-model="group.label"></p>
+                                        <p>Size: <input class="form-control" type="text" v-model="group.size"></p>
 
-                                  <input type="submit" value="Edit Group" class="btn btn-warning">
-                                </form>
+                                         <div class="form-group">
+                                            <label>Meet Before Options: </label> 
+                                          <select class="form-control" v-model="group.meet_before" name="meet_before">
+                                            <option class="form-control" value="drinks">Drinks</option>
+                                            <option class="form-control" value="dinner">Dinner</option>
+                                            <option class="form-control" value="dinner_and_drinks">Dinner and Drinks</option>
+                                          </select>
+                                        </div>
 
-                                <button class="btn btn-warning" v-on:click="destroyGroup()">Delete Group</button>     
+                                         <p class="form-group">
+                                            <label>Drink Level: </label> 
+                                          <select class="form-control" v-model="group.drink_level" name="drink_level">
+                                            <option class="form-control" value="sober">Sober</option>
+                                            <option class="form-control" value="one_to_two">One to Two</option>
+                                            <option class="form-control" value="three_or_more">Three or more</option>
+                                          </select>
+                                        </p>
+
+                                        <input type="submit" data-target="#collapseExample" value="Edit Group" class="btn btn-block btn-warning">
+
+                                        <div class="alert-message">
+                                          <ul>
+                                            <li class="text-danger" v-for="error in errors">{{ error }}</li>
+                                          </ul>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                <button class="btn btn-block btn-warning" v-on:click="popUp()">Delete Group</button>   
                               </div>
                           </div>
                         <!-- end div .counter -->
@@ -158,7 +162,7 @@
 
                   <div>
                     Who would you like to send the message to?: 
-                    <select v-model="inputPhoneNumber">
+                    <select class="form-control" v-model="inputPhoneNumber">
                       <option v-for="request in group.requests" v-bind:value="request.user.phone_number">{{ request.user.name }}</option>
                       <option v-bind:value="group.creater.phone_number">{{ group.creater.name }}</option>
                     </select>
@@ -168,7 +172,7 @@
 
 
                   <div>
-                    Send a message to all users:
+                    Send message to all users:
                     <button v-on:click="sendMessage('group')">Send!</button>
                   </div>
              </div>
@@ -357,9 +361,6 @@ export default {
         });
       },
 
-
-
-
       // confirmedUsers: function() {
 
       //   this.group['requests'].forEach(function(person) {
@@ -368,13 +369,23 @@ export default {
       //     }
       //   });
       // }
-    
-    destroyGroup: function() {
-      axios.delete("/api/groups/" + this.group.id)
-        .then(response => {
-          console.log("Success", response.data);
-          this.$router.push("/"); 
-        });
+
+      destroyGroup: function() {
+        axios.delete("/api/groups/" + this.group.id)
+          .then(response => {
+            console.log("Success", response.data);
+            this.$router.push("/"); 
+          });
+      },
+
+    popUp: function() {
+        var txt;
+        if (confirm("Are you sure you want to delete this group?")) {
+          this.destroyGroup();
+          txt = "Group Deleted!";
+        } else {
+          txt = "You pressed Cancel!";
+        }
     },
   }
 };

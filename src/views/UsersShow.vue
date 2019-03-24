@@ -19,6 +19,7 @@
                         <h1>Attend</h1>
                         <div class="counter">
                           <h2> {{ user.name }}'s Profile Page</h2>
+                          <p>{{ user.summary }}</p>
 
                           <highcharts :options="chartOptions"></highcharts>
 
@@ -85,6 +86,11 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="sr-only">Phone Number</label>
+                            <input type="text" class="form-control" v-model="user.phone_number">
+                        </div>
+
+                        <div class="form-group">
                             <label class="sr-only">Summary</label>
                             <input type="text" class="form-control" v-model="user.summary">
                         </div>
@@ -126,6 +132,7 @@ export default {
               gender: "",
               summary: "",
               location: "",
+              phone_number: "",
               user_events:  [
                             {
                             id: "",

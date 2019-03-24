@@ -68,7 +68,7 @@
 
                                    <div class="form-group">
                                       <label>Meet Before Options: </label> 
-                                    <select v-model="newGroupMeetBefore" name="meet_before">
+                                    <select class="form-control" v-model="newGroupMeetBefore" name="meet_before">
                                       <option value="drinks">Drinks</option>
                                       <option value="dinner">Dinner</option>
                                       <option value="dinner_and_drinks">Dinner and Drinks</option>
@@ -77,7 +77,7 @@
 
                                    <p class="form-group">
                                       <label>Drink Level: </label> 
-                                    <select v-model="newGroupDrinkLevel" name="drink_level">
+                                    <select class="form-control" v-model="newGroupDrinkLevel" name="drink_level">
                                       <option value="sober">Sober</option>
                                       <option value="one_to_two">One to Two</option>
                                       <option value="three_or_more">Three or more</option>
@@ -111,7 +111,6 @@
                       <p>Remaining Group Capacity: {{ group.formatted.size }} </p>
                       <p>Meet Before?: {{ group.formatted.meet_before }}</p>
                       <p>Drink Amount: {{ group.formatted.drink_level }}</p>
-                      <p>Gender Preference: {{ group.formatted.gender_preference }}</p>
                     </div>
                     <div else>
                     </div>
@@ -134,7 +133,7 @@
   h2 {
     color: black;
   }
-  
+
 </style>
 
 <script>
