@@ -8,13 +8,11 @@
                     <ul class="navigation">
                       <li><router-link to="/">Home</router-link></li>
                       <li><router-link :to="'/users/' + user_id" >Profile</router-link></li>
-                      <li><router-link to="/login">Login</router-link></li>
                       <li><router-link to="/logout">Logout</router-link></li>
-                      <li><router-link to="/signup">Signup</router-link> </li>
                     </ul>
                     <h1>Attend</h1>
                     <div class="counter">
-                        <p>Choose an event that you are interested in?</p>
+
                     </div>
                     <!-- end div .counter -->
                 </section>
@@ -24,14 +22,7 @@
     
     <div class="col-right">
         <div class="middle tab-content">                
-            <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
-              <!--   <p>Search events by zipcode: 
-                  <form v-on:submit.prevent="editGroup()">
-                    <input type="text" name="location" v-model="searchLocationQuery">
-                    <input type="submit" value="Search" class="btn btn-warning">
-                  </form>
-                </p> -->
-                                  
+            <section class="section section-newsletter tab-pane fade in active" id="newsletter">        
                 <div class="block-list">
                     <div class="block" v-for="event in geekEvents">
                         <!-- <i class="fa fa-laptop"></i>  -->

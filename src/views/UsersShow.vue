@@ -21,7 +21,7 @@
                           <h2> {{ user.name }} </h2>
                           <p>{{ user.summary }}</p>
 
-                          <highcharts :options="chartOptions"></highcharts>
+                          <!-- <highcharts :options="chartOptions"></highcharts> -->
 
                         </div>
                         <!-- end div .counter -->
@@ -31,23 +31,25 @@
         </div><!-- .col-left --> 
     
     <div style="display: flex;" class="col-right">
-        <div class="middle tab-content">                
-            <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
+        <div style="flex: 1;" class="middle tab-content">
+          <img :src="user.image_url" alt="">
+           <highcharts :options="chartOptions"></highcharts>
+            <section style="flex: 1;" class="section section-newsletter tab-pane fade in active" id="newsletter"> 
 
-                  <h3> {{ user.name }}'s Groups</h3>
-                    <div v-for="group in user.groups">
-                      <ol>
-                        <li style="font-size: 20px">
-                          <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
-                        </li>
-                      </ol>
-                    </div>
-                 
-                      <ol>
-                       <li style="font-size: 20px" v-for="group in user.created_groups">
-                        <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }} (ADMIN)</router-link>
-                      </li>
-                    </ol>
+              <h3> {{ user.name }}'s Groups</h3>
+                <div v-for="group in user.groups">
+                  <ol>
+                    <li style="font-size: 20px">
+                      <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
+                    </li>
+                  </ol>
+                </div>
+             
+                  <ol>
+                   <li style="font-size: 20px" v-for="group in user.created_groups">
+                    <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }} (ADMIN)</router-link>
+                  </li>
+                </ol>
                 
                 <div v-if="user_id == user.id">
 
@@ -92,6 +94,11 @@
                         <div class="form-group">
                             <label class="sr-only">Summary</label>
                             <input type="text" class="form-control" v-model="user.summary">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="sr-only">Image</label>
+                            <input type="file" v-on:change="setFile($event)" ref="fileInput">
                         </div>
 
                         <input type="submit" value="Update" class="btn btn-block btn-primary">
@@ -247,15 +254,6 @@ export default {
                       // ['Internet Explorer', 13],
                       // ['Edge', 3.78],
                       // ['Safari', 3.42],
-
-
-                      // {
-                      //   name: 'Other',
-                      //   y: 7.61,
-                        // dataLabels: {
-                        //   enabled: false
-                        // }
-                      // }
                     ]
                   }],
                   credits: {
@@ -280,28 +278,33 @@ export default {
   methods: {
 
       submit: function() {
-        var params = {
-                      name: this.user.label,
-                      age: this.user.age,
-                      gender: this.user.gender,
-                      location: this.user.location,
-                      summary: this.user.summary
-                      };
+       var params = new FormData();
+       
+         params.append("name", this.user.name);
+         params.append("email", this.user.email);
+         params.append("age", this.user.age);
+         params.append("summary", this.user.summary);
+         params.append("gender", this.user.gender);
+         params.append("location", this.user.location);
+         params.append("phone_number", this.user.phone_number);
+         if (this.user.image) {
+           params.append("image", this.user.image);
+         }
 
         axios.patch("/api/users/" + this.user.id, params)
           .then(response => {
             this.user = response.data;
+            this.$refs.fileInput.value = "";
           }).catch(error => {
             this.errors = error.response.data.errors;
           });
       },
+
+      setFile: function(event) {
+        if (event.target.files.length > 0) {
+        this.user.image = event.target.files[0];
+        }
+      }
     },
-    // destroyGroup: function() {
-    //   axios.delete("/api/groups/" + this.group.id)
-    //     .then(response => {
-    //       console.log("Success", response.data);
-    //       this.$router.push("/"); 
-    //     });
-    // },
 };
 </script>

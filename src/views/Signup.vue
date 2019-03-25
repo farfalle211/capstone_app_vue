@@ -13,7 +13,6 @@
                     </ul>
                     <h1>Attend</h1>
                     <div class="counter">
-                        <p>Choose an event that you are interested in?</p>
                     </div>
                     <!-- end div .counter -->
                 </section>
@@ -44,7 +43,6 @@
                       <input class="form-control" type="password" id="message" v-model="password" placeholder="Password" required="">
                   </div>
 
-
                   <div class="form-group">
                       <label class="sr-only">Password Confirmation: </label>
                       <input class="form-control" type="password" v-model="passwordConfirmation" placeholder="Password Confirmation" required="">
@@ -74,6 +72,10 @@
                   <div class="form-group">
                       <label class="sr-only">Message</label>
                       <textarea class="form-control" v-model="userSummary" id="message" name="message" rows="7" placeholder="Text about yourself!" required=""></textarea>
+                  </div>
+
+                  <div class="form-group">
+                      <input type="file" v-on:change="setFile($event)" ref="fileInput">
                   </div>
 
                   <div class="text-center">
@@ -110,30 +112,40 @@ export default {
       userGender: "",
       userLocation: "",
       userPhoneNumber: "",
+      userNewImage: "",
       errors: []
     };
   },
   methods: {
     submit: function() {
-      var params = {
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        password_confirmation: this.passwordConfirmation,
-        age: this.userAge,
-        summary: this.userSummary,
-        gender: this.userGender,
-        location: this.userLocation,
-        phone_number: this.userPhoneNumber
-      };
+      var params = new FormData();
+   
+        params.append("name", this.name);
+        params.append("email", this.email);
+        params.append("password", this.password);
+        params.append("password_confirmation", this.passwordConfirmation);
+        params.append("age", this.userAge);
+        params.append("summary", this.userSummary);
+        params.append("gender", this.userGender);
+        params.append("location", this.userLocation);
+        params.append("phone_number", this.userPhoneNumber);
+        params.append("image", this.userNewImage);
+
       axios
         .post("/api/users", params)
         .then(response => {
           this.$router.push("/login");
+          this.$refs.fileInput.value = "";
         })
         .catch(error => {
           this.errors = error.response.data.errors;
         });
+    },
+
+    setFile: function(event) {
+      if (event.target.files.length > 0) {
+      this.userNewImage = event.target.files[0];
+      }
     }
   }
 };

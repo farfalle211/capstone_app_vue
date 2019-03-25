@@ -5,14 +5,14 @@
         <div class="middle">
             <div class="inner">
                 <section class="section section-welcome">
+                  <h1>Attend</h1>
                     <ul class="navigation">
                       <li><router-link to="/">Home</router-link></li>
                       <li><router-link to="/logout">Logout</router-link></li>
                       <li><router-link to="/signup">Signup</router-link> </li>
                     </ul>
-                    <h1>Attend</h1>
                     <div class="counter">
-                        <p>Choose an event that you are interested in?</p>
+          
                     </div>
                     <!-- end div .counter -->
                 </section>
@@ -25,21 +25,8 @@
             <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
                 
                 <h2>Login</h2>                    
-                <ul class="info">
-                    <li><i class="fa fa-home"></i> 3137 rue Levy Montreal, QC H3C 5K4</li>
-                    <li><i class="fa fa-phone"></i> +1 (234) 567-8910</li>
-                    <li><i class="fa fa-envelope"></i> <a href="mailto:infp@example.com">infp@example.com</a></li>
-                </ul>
-                <ul class="social-icon">
-                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                    <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                    <li><a href="#"><i class="fa fa-behance"></i></a></li>
-                    <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-                </ul>
 
                 <div class="separator"></div>
-                <p>Please enter your login information: </p>
                 <form class="contact-form" v-on:submit.prevent="submit()">
                     <div class="form-group">
                         <label class="sr-only">Email</label>
@@ -50,7 +37,7 @@
                         <input type="password" class="form-control" v-model="password" placeholder="Password*">            
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-main">Submit</button>
+                        <button type="submit" class="btn btn-block btn-main">Submit</button>
                     </div>
                     <div class="alert-message">
                       <ul>
