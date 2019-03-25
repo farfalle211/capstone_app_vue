@@ -99,7 +99,9 @@ export default {
                             location: "",
                             formatted: {
                                           date: ""
-                                        }
+                                        },
+                            latitude: "",
+                            longitude: ""
                             }
                           ],
             user_id: ""

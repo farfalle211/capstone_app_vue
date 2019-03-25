@@ -203,7 +203,11 @@ export default {
                     plotBackgroundColor: 'rgb(2, 174, 240)',
                     plotBorderWidth: 0,
                     plotShadow: false,
-                    backgroundColor: null
+                    backgroundColor: null,
+                    borderWidth: 2,
+                    borderRadius: 5,
+                    type: 'line',
+                    borderColor: 'black'
                   },
                   title: {
                     text: 'Attended<br>Stats',
