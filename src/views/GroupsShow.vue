@@ -82,7 +82,7 @@
                 
                <div v-if="!group.requested && (group.creater_id != user_id) && group.open === true">
                  <h3>Request to Join Group</h3>
-                 <button v-on:click="createRequest()">Create Request</button>
+                 <button v-on:click="createRequest()" class="btn btn-success">Create Request</button>
                <!-- <div v-if="createRequest()">Request Created!</div> -->
                </div>
 
@@ -95,7 +95,6 @@
                        <button v-on:click="destroyRequest()" class="btn btn-danger">Delete Join Request</button>
                      </div>
                  </div>
-                 
 
                  <div v-if="(group.creater_id == user_id) && group.open === true">
                    <h5>Current User Requests: </h5>
@@ -103,7 +102,7 @@
                      <div v-if="request.confirmed === 'confirmed'"></div>
                      <div v-else-if="request.confirmed === 'pending'">
                        <li>{{ request.user.name }}</li>
-                         <button v-on:click="confirmRequest(request.id)">Confirm Request</button>
+                         <button v-on:click="confirmRequest(request.id)" class="btn btn-success">Confirm Request</button>
                      </div>
                      <div v-else>
                        No Current User Requests

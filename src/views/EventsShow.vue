@@ -15,94 +15,7 @@
                         <h1>Attend</h1>
                         <div class="counter">
                         
-                            <h2>{{ event.name }}</h2>
-                            <p>Date: {{ event.date }}</p>
-                            <p>Category: {{ event.category }}</p>
-                            <p>Location: {{ event.location }}</p>
-                            
 
-                              <div v-if="!event.user_event_by_user">
-                                <p>Express interest below:</p>
-                                <form v-on:submit.prevent="submit_interest()">
-
-                                <div>Have you purchased tickets?</div>
-                                 <div class="form-group">
-                                    <label>Confirmation Status: </label> 
-                                  <select class="form-control" v-model="newConfirmationStatus">
-                                    <option value="not_purchased">Not Purchased</option>
-                                    <option value="purchased">Purchased</option>
-                                  </select>
-                                </div>
-
-                               <!--  <div class="form-group">
-                                   <label>Seating Quality: </label>
-                                  <select class="form-control" name="seating_quality" v-model="newSeatingQuality">
-                                    <option value="good_seats">Good Seats</option>
-                                    <option value="nosebleed">Nosebleed</option>
-                                  </select>
-                                </div> -->
-
-                                  <input type="submit" class="btn btn-primary" value="I'm interested!">
-                                </form>
-                              </div>
-
-                              <div v-if="event.user_event_by_user">
-                                <div v-if="event.user_event_by_user.distance_between">
-                                  <button class="btn btn-block btn-warning" v-on:click="checkIn(event.user_event_by_user.id)">Check In!</button> 
-                                </div>  
-
-                                <ul>
-                                  <li v-for="error in errors">{{ error }}</li>
-                                </ul>
-
-
-                                <!-- modal -->
-                              
-                            <modal v-if="showModal">
-                              <h3 slot="header" class="modal-title">
-                                Create Group
-                              </h3>
-                              <div slot="body" class="text-center">
-                                <ul>
-                                  <li v-for="error in errors">{{ error }}</li>
-                                </ul>
-                                <form v-on:submit.prevent="closeModal(); submit()">
-                                  <div>
-                                    <p style="font-weight: bold;">Label: <input class="form-control" type="text" v-model="newGroupLabel"></p>
-                                    <p style="font-weight: bold;">Size: <input class="form-control" type="number" v-model="newGroupSize"></p>
-
-                                     <div class="form-group">
-                                        <label>Meet Before Options: </label> 
-                                      <select class="form-control" v-model="newGroupMeetBefore" name="meet_before">
-                                        <option value="drinks">Drinks</option>
-                                        <option value="dinner">Dinner</option>
-                                        <option value="dinner_and_drinks">Dinner and Drinks</option>
-                                      </select>
-                                    </div>
-
-                                     <p class="form-group">
-                                        <label>Drink Level: </label> 
-                                      <select class="form-control" v-model="newGroupDrinkLevel" name="drink_level">
-                                        <option value="sober">Sober</option>
-                                        <option value="one_to_two">One to Two</option>
-                                        <option value="three_or_more">Three or more</option>
-                                      </select>
-                                    </p>
-
-                                  </div>
-                                </form>
-                              </div>
-                              <div slot="footer" class="mt-3">
-                               <button type="button" class="btn btn-outline-info mr-1" @click="closeModal()">Close</button>
-                               <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" @click="closeModal(); submit();">
-                                 Submit
-                               </button>
-                              </div>
-                            </modal>
-                            <button class="btn btn-block btn-primary" @click="openModal();"> Create a Group </button>
-
-                                <!-- end modal -->
-                          </div>
                         </div>
                         <!-- end div .counter -->
                     </section>
@@ -114,6 +27,73 @@
         <div class="middle tab-content">                
             <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
            
+              <h2>{{ event.name }}</h2>
+              <p>Date: {{ event.date }}</p>
+              <p>Category: {{ event.category }}</p>
+              <p>Location: {{ event.location }}</p>
+              
+
+                <div v-if="!event.user_event_by_user">
+                  
+                  <form v-on:submit.prevent="submit_interest()">
+
+                   <div class="form-group">
+                      <label>Have you purchased tickets? </label> 
+                    <select class="form-control" v-model="newConfirmationStatus">
+                      <option value="not_purchased">Not Purchased</option>
+                      <option value="purchased">Purchased</option>
+                    </select>
+                  </div>
+
+                    <input type="submit" class="btn btn-primary" value="I'm interested!">
+                  </form>
+                </div>
+
+                <div v-if="event.user_event_by_user">
+                  <div v-if="event.user_event_by_user.distance_between">
+                    <button class="btn btn-block btn-warning" v-on:click="checkIn(event.user_event_by_user.id)">Check In!</button> 
+                  </div>  
+
+                  <ul>
+                    <li v-for="error in errors">{{ error }}</li>
+                  </ul>
+
+                  <p>
+                    <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                      Create a Group!
+                    </button>
+                  </p>
+                  <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                      <form v-on:submit.prevent="submit()">
+
+                      <p style="font-weight: bold;">Label: <input class="form-control" type="text" v-model="newGroupLabel"></p>
+                      <p style="font-weight: bold;">Size: <input class="form-control" type="number" v-model="newGroupSize"></p>
+
+                       <div class="form-group">
+                          <label>Meet Before Options: </label> 
+                        <select class="form-control" v-model="newGroupMeetBefore" name="meet_before">
+                          <option value="drinks">Drinks</option>
+                          <option value="dinner">Dinner</option>
+                          <option value="dinner_and_drinks">Dinner and Drinks</option>
+                        </select>
+                      </div>
+
+                       <p class="form-group">
+                          <label>Drink Level: </label> 
+                        <select class="form-control" v-model="newGroupDrinkLevel" name="drink_level">
+                          <option value="sober">Sober</option>
+                          <option value="one_to_two">One to Two</option>
+                          <option value="three_or_more">Three or more</option>
+                        </select>
+                      </p>
+
+                      <input type="submit" data-target="#collapseExample" value="Create Group" class="btn btn-block btn-primary">
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="separator"></div>
               <h2>Current Groups</h2>
                 <div v-if="event.user_event_by_user">
                 <!-- <button v-on:click="userEvent()">Show Groups</button> -->
@@ -153,13 +133,8 @@
 <script>
 import axios from "axios";
 const math = require('mathjs');
-import Modal from '../components/Modal.vue';
 
 export default {
-  components: {
-    Modal
-  },
-
   data: function() {
     return {
       event: {
@@ -227,7 +202,6 @@ export default {
       newConfirmationStatus: "",
       newSeatingQuality: "",
       user_id: "",
-      showModal: false,
       errors: []
 
     };
@@ -306,15 +280,7 @@ export default {
                 this.errors = error.response.data.errors;
             });
           }
-        },
-
-        openModal: function() {
-             this.showModal = true;
-           },
-
-         closeModal: function() {
-           this.showModal = false;
-         },
+        }
 
     // showGroup: function(photo) {
     //   if (this.currentPhoto === photo) {

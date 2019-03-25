@@ -146,7 +146,7 @@ ul
     display: table;
     float: left;
 
-    width: 50%;
+    width: 30%;
     height: 100%;
 }
 
@@ -155,7 +155,7 @@ ul
     display: table;
     float: right;
 
-    width: 50%;
+    width: 70%;
     height: 100%;
 }
 
@@ -397,7 +397,7 @@ ul
 
 .section
 {
-    max-width: 600px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px 60px;
 }
@@ -538,6 +538,7 @@ ul
     border-color: #02aef0;
     border-radius: 0;
     background: rgba(0,0,0,.2);
+    max-width: 400px;
 }
 
 .form-control:focus
@@ -573,6 +574,8 @@ label
     text-transform: uppercase;
 
     border-radius: 0;
+
+    max-width: 400px;
 }
 
 .btn-main

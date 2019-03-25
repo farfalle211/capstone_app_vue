@@ -9,6 +9,7 @@
             <div class="middle">
                 <div class="inner">
                     <section class="section section-welcome">
+                      <h1>Attend</h1>
                         <ul class="navigation">
                           <li><router-link to="/">Home</router-link></li>
                           <li><router-link :to="'/users/' + user_id" >Profile</router-link></li>
@@ -16,9 +17,8 @@
                           <li><router-link to="/logout">Logout</router-link></li>
                           <li><router-link to="/signup">Signup</router-link></li>
                         </ul>
-                        <h1>Attend</h1>
                         <div class="counter">
-                          <h2> {{ user.name }}'s Profile Page</h2>
+                          <h2> {{ user.name }} </h2>
                           <p>{{ user.summary }}</p>
 
                           <highcharts :options="chartOptions"></highcharts>
@@ -30,9 +30,10 @@
             </div><!-- .middle --> 
         </div><!-- .col-left --> 
     
-    <div class="col-right">
+    <div style="display: flex;" class="col-right">
         <div class="middle tab-content">                
             <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
+
                   <h3> {{ user.name }}'s Groups</h3>
                     <div v-for="group in user.groups">
                       <ol>
@@ -41,14 +42,13 @@
                         </li>
                       </ol>
                     </div>
-                  <div v-if="user_id == user.id">
-                    <h3>Groups you are the Administrator Of</h3>
+                 
                       <ol>
                        <li style="font-size: 20px" v-for="group in user.created_groups">
-                        <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
+                        <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }} (ADMIN)</router-link>
                       </li>
                     </ol>
-                  </div>
+                
                 <div v-if="user_id == user.id">
 
                   <p>
