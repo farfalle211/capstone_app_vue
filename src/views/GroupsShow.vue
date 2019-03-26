@@ -9,176 +9,186 @@
             <div class="middle">
                 <div class="inner">
                     <section class="section section-welcome">
+                      <h1>Attend</h1>
                         <ul class="navigation">
                           <li><router-link to="/">Home</router-link></li>
                           <li><router-link :to="'/users/' + user_id" >Profile</router-link></li>
-                          <li><router-link to="/login">Login</router-link></li>
                           <li><router-link to="/logout">Logout</router-link></li>
-                          <li><router-link to="/signup">Signup</router-link></li>
                         </ul>
-                        <h1>Attend</h1>
                         <div class="counter">
-                              <h4 v-if="group.creater_id == user_id">You are the Admin of this Group</h4>
-                              <h1>{{ group.label }}</h1>
-                              <router-link style="text-decoration: underline;" :to="'/events/' + group.event_id">
-                                <h2>{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h2>
-                            </router-link>
-                              <p style="display: inline;">Current Group Capacity: <p style="font-weight: bold; display: inline;"> {{ group.formatted.size }}</p> </p>
-                              <p>Meeting Before For: {{ group.formatted.meet_before }}</p>
-                              <p>Drink Level: {{ group.formatted.drink_level }}</p>
-
-                                <div v-if="group.creater_id == user_id">
-                                  <p>
-                                    <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                      Edit Your Group!
-                                    </button>
-                                  </p>
-                                  <div class="collapse" id="collapseExample">
-                                    <div class="card card-body">
-                                      <form v-on:submit.prevent="editGroup()">
-                                        <p>Label: <input class="form-control" type="text" v-model="group.label"></p>
-                                        <p>Size: <input class="form-control" type="text" v-model="group.size"></p>
-
-                                         <div class="form-group">
-                                            <label>Meet Before Options: </label> 
-                                          <select class="form-control" v-model="group.meet_before" name="meet_before">
-                                            <option class="form-control" value="drinks">Drinks</option>
-                                            <option class="form-control" value="dinner">Dinner</option>
-                                            <option class="form-control" value="dinner_and_drinks">Dinner and Drinks</option>
-                                          </select>
-                                        </div>
-
-                                         <p class="form-group">
-                                            <label>Drink Level: </label> 
-                                          <select class="form-control" v-model="group.drink_level" name="drink_level">
-                                            <option class="form-control" value="sober">Sober</option>
-                                            <option class="form-control" value="one_to_two">One to Two</option>
-                                            <option class="form-control" value="three_or_more">Three or more</option>
-                                          </select>
-                                        </p>
-
-                                        <input type="submit" data-target="#collapseExample" value="Edit Group" class="btn btn-block btn-warning">
-
-                                        <div class="alert-message">
-                                          <ul>
-                                            <li class="text-danger" v-for="error in errors">{{ error }}</li>
-                                          </ul>
-                                        </div>
-                                      </form>
-                                    </div>
-                                  </div>
-                                <button class="btn btn-block btn-warning" v-on:click="popUp()">Delete Group</button>   
-                              </div>
-                          </div>
+                            
+                        </div>
                         <!-- end div .counter -->
                     </section>
                 </div>
             </div><!-- .middle --> 
         </div><!-- .col-left --> 
     
-    <div class="col-right">
-        <div class="middle tab-content">                
-            <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
-                
-               <div v-if="!group.requested && (group.creater_id != user_id) && group.open === true">
-                 <h3>Request to Join Group</h3>
-                 <button v-on:click="createRequest()" class="btn btn-success">Create Request</button>
-               <!-- <div v-if="createRequest()">Request Created!</div> -->
-               </div>
+    <div class="col-right pl-4">
+      <div class="row">
+        <div class="middle tab-content col-md-6">
+          <h4 v-if="group.creater_id == user_id">You are the Admin of this Group</h4>
+          <h1>{{ group.label }}</h1>
+          <router-link style="text-decoration: underline;" :to="'/events/' + group.event_id">
+            <h2>{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h2>
+          </router-link>
+          <p style="display: inline;">Current Group Capacity: <p style="font-weight: bold; display: inline;"> {{ group.formatted.size }}</p> </p>
+          <p>Meeting Before For: {{ group.formatted.meet_before }}</p>
+          <p>Drink Level: {{ group.formatted.drink_level }}</p>
 
-                 <div v-if="(group.creater_id != user_id) && group.requested">
-                   <h3> Group Join Status: {{ group.requested.confirmed }} </h3>
-                   <div v-if="(group.requested && group.requested.confirmed === 'confirmed')">
-                     <button v-on:click="destroyRequest()" class="btn btn-danger">Leave Group</button>
-                   </div>
-                     <div v-else>
-                       <button v-on:click="destroyRequest()" class="btn btn-danger">Delete Join Request</button>
-                     </div>
-                 </div>
+          <div v-if="group.creater_id == user_id">
+            <p>
+              <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Edit Your Group!
+              </button>
+            </p>
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body">
+                <form v-on:submit.prevent="editGroup()">
+                  <p>Label: <input class="form-control" type="text" v-model="group.label"></p>
+                  <p>Size: <input class="form-control" type="text" v-model="group.size"></p>
 
-                 <div v-if="(group.creater_id == user_id) && group.open === true">
-                   <h5>Current User Requests: </h5>
-                   <div v-for="request in group.requests">
-                     <div v-if="request.confirmed === 'confirmed'"></div>
-                     <div v-else-if="request.confirmed === 'pending'">
-                       <li>{{ request.user.name }}</li>
-                         <button v-on:click="confirmRequest(request.id)" class="btn btn-success">Confirm Request</button>
-                     </div>
-                     <div v-else>
-                       No Current User Requests
-                     </div>
-                   </div>
-                 </div><br>
-               
-               <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
-                 <h5>Group's Current Users: </h5> 
-                 <ol>
-                   <li>
-                      <router-link :to="'/users/' + group.creater_id">
-                     {{ group.creater.name }},
-                     {{ group.creater.age }},
-                     {{ group.creater.location }} --
-                     </router-link> 
-                     <h4 style="display: inline;">Group Admin</h4>
-                   </li>
-               
-                   <div v-for="request in group.requests">
-                     <li v-if="request.confirmed === 'confirmed'">
-                      <router-link :to="'/users/' + request.user.id">
-                         {{ request.user.name }},
-                         {{ request.user.age }},
-                         {{ request.user.location }}
-                       </router-link>
-                       <div v-if="group.creater_id == user_id" style="display: inline">
-                         <button v-on:click="removeUser(request.id)">Remove User</button>
-                       </div>
-                     </li>
-                   </div>  
-                 </ol>
-               </div>
+                    <div class="form-group">
+                      <label>Meet Before Options: </label> 
+                      <select class="form-control" v-model="group.meet_before" name="meet_before">
+                        <option class="form-control" value="drinks">Drinks</option>
+                        <option class="form-control" value="dinner">Dinner</option>
+                        <option class="form-control" value="dinner_and_drinks">Dinner and Drinks</option>
+                      </select>
+                    </div>
 
-              <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
-              
-                <h3>Text Members in your Group!</h3>
-                  
-                <div>
-                  <div style="padding-bottom: 10px; display:inline;">
-                  Running: <input style="color: black;" type="number" v-model="numberOfMinutes"> Minutes Late!
-                  </div>
-
-                  <div style="padding-bottom: 10px">
-                  <button v-on:click="imLate()">Send!</button>
-                  </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label class="sr-only">Message</label>
-                    <textarea style="color: black;" v-model="userMessage" rows="4" cols="40" placeholder="Enter your message" required=""></textarea>
-                </div>
-
-                <!-- Message: <input style="color: black;" v-model="userMessage"> -->
-
-                  <div>
-                    Who would you like to send the message to?: 
-                    <select class="form-control" v-model="inputPhoneNumber">
-                      <option v-for="request in group.requests" v-bind:value="request.user.phone_number">{{ request.user.name }}</option>
-                      <option v-bind:value="group.creater.phone_number">{{ group.creater.name }}</option>
+                    <p class="form-group">
+                      <label>Drink Level: </label> 
+                    <select class="form-control" v-model="group.drink_level" name="drink_level">
+                      <option class="form-control" value="sober">Sober</option>
+                      <option class="form-control" value="one_to_two">One to Two</option>
+                      <option class="form-control" value="three_or_more">Three or more</option>
                     </select>
+                    </p>
 
-                    <button v-on:click="sendMessage('solo')">Send!</button>
-                  </div>
+                    <input type="submit" data-target="#collapseExample" value="Edit Group" class="btn btn-block btn-primary">
+
+                    <div class="alert-message">
+                      <ul>
+                        <li class="text-danger" v-for="error in errors">{{ error }}</li>
+                      </ul>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            <button class="btn btn-block btn-warning" v-on:click="popUp()">Delete Group</button>   
+          </div>       
+        </div>
+        
+        <div class="middle tab-content col-md-6">
+         <div v-if="!group.requested && (group.creater_id != user_id) && group.open === true">
+           <h3>Request to Join Group</h3>
+           <button v-on:click="createRequest()" class="btn btn-success">Create Request</button>
+         </div>
+
+          <div v-if="(group.creater_id != user_id) && group.requested">
+            <h3> Group Join Status: {{ group.requested.confirmed }} </h3>
+            <div v-if="(group.requested && group.requested.confirmed === 'confirmed')">
+              <button v-on:click="destroyRequest()" class="btn btn-danger">Leave Group</button>
+            </div>
+          <div v-else>
+            <button v-on:click="destroyRequest()" class="btn btn-danger">Delete Join Request</button>
+          </div>
+          </div>
+
+          <div v-if="(group.creater_id == user_id) && group.open === true">
+            <h5>Current User Requests: </h5>
+            <div v-for="request in group.requests">
+              <div v-if="request.confirmed === 'confirmed'"></div>
+              <div v-else-if="request.confirmed === 'pending'">
+                <li>{{ request.user.name }}</li>
+                  <button v-on:click="confirmRequest(request.id)" class="btn btn-success">Confirm Request</button>
+              </div>
+              <div v-else>
+                No Current User Requests
+              </div>
+            </div>
+          </div><br>
+         
+          <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
+            <h5>Group's Current Users: </h5> 
+            <ol>
+              <li>
+                <router-link :to="'/users/' + group.creater_id">
+               {{ group.creater.name }},
+               {{ group.creater.age }},
+               {{ group.creater.location }} --
+               </router-link> 
+               <h4 style="display: inline;">Group Admin</h4>
+             </li>
+           
+             <div v-for="request in group.requests">
+               <li v-if="request.confirmed === 'confirmed'">
+                <router-link :to="'/users/' + request.user.id">
+                   {{ request.user.name }},
+                   {{ request.user.age }},
+                   {{ request.user.location }}
+                 </router-link>
+                 <div v-if="group.creater_id == user_id" style="display: inline">
+                   <button v-on:click="removeUser(request.id)">Remove User</button>
+                 </div>
+               </li>
+             </div>  
+             </ol>
+          </div>
+
+          <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
+            
+            <ul class="nav nav-tabs">
+              <li class="nav-item">
+                <a class="nav-link" v-bind:class="{active: textStatus === 'late'}" v-on:click="textStatus = 'late'">Late</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" v-bind:class="{active: textStatus === 'message'}" v-on:click="textStatus = 'message'">Message</a>
+              </li>
+            </ul>
+            <h3>Text Members in your Group!</h3>
+
+            <div v-if="textStatus === 'late'">
+              <div>
+                <div style="padding-bottom: 10px; display:inline;">
+                Running: <input style="color: black;" type="number" v-model="numberOfMinutes"> Minutes Late!
+                </div>
+
+                <div style="padding-bottom: 10px">
+                <button class="btn btn-primary" v-on:click="imLate()">Send!</button>
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <div class="form-group">
+                  <label class="sr-only">Message</label>
+                  <textarea style="color: black;" v-model="userMessage" rows="4" cols="40" placeholder="Enter your message" required=""></textarea>
+              </div>
+              <!-- Message: <input style="color: black;" v-model="userMessage"> -->
+
+                <div>
+                  Who would you like to send the message to?: 
+                  <select class="form-control" v-model="inputPhoneNumber">
+                    <option v-for="request in group.requests" v-bind:value="request.user.phone_number">{{ request.user.name }}</option>
+                    <option v-bind:value="group.creater.phone_number">{{ group.creater.name }}</option>
+                  </select>
+
+                  <button class="btn btn-primary" v-on:click="sendMessage('solo')">Send!</button>
+                </div>
+                <div>
+                  Send message to all users:
+                  <button class="btn btn-primary" v-on:click="sendMessage('group')">Send!</button>
+                </div>
+            </div>
 
 
-                  <div>
-                    Send message to all users:
-                    <button v-on:click="sendMessage('group')">Send!</button>
-                  </div>
-             </div>
 
 
-            </section><!-- #newsletter -->               
-        </div><!-- .middle.tab-content --> 
+          </div>
+        </div>
+      </div>
+
     </div><!-- .col-right --> 
   </div>
 </template>
@@ -187,6 +197,8 @@
   button {
     color: black;
   }
+
+
 </style>
 
 <script>
@@ -248,7 +260,8 @@ export default {
       userMessage: "",
       confirmedGroupMembers: [],
       inputPhoneNumber: "",
-      errors: []
+      errors: [],
+      textStatus: 'late'
     };
   },
   created: function() {

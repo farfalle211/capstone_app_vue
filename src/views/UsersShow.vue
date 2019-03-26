@@ -12,8 +12,6 @@
                       <h1>Attend</h1>
                         <ul class="navigation">
                           <li><router-link to="/">Home</router-link></li>
-                          <li><router-link :to="'/users/' + user_id" >Profile</router-link></li>
-                          <li><router-link to="/login">Login</router-link></li>
                           <li><router-link to="/logout">Logout</router-link></li>
                           <li><router-link to="/signup">Signup</router-link></li>
                         </ul>
@@ -30,93 +28,30 @@
 
     <div class="col-right">
         <div class="middle tab-content">
-          <div class="col-md-4">
 
+          <div class="col-md-4">
             <div class="thumbnail row">
               <img class="img-circle" :src="user.image_url" alt="">
               <div class="caption">
                 <h3>{{ user.name }}, {{ user.age }}, {{ user.location }}</h3>
                 <p>{{ user.summary }}</p>
-                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-              </div>
-            </div>
-
-          </div>
-          <div class="col-md-8">
-           <highcharts :options="chartOptions"></highcharts>
-          </div>
-
-            <section class="section section-newsletter tab-pane fade in active col-md-6" id="newsletter"> 
-
-
-                  <table class="table">
-                     <thead class="thead-light">
-                       <tr>
-                         <th class="text-center" scope="col">Group Name</th>
-                         <th class="text-center" scope="col">Event</th>
-                         <th class="text-center" scope="col">Capacity</th>
-                         <th class="text-center" scope="col">Meet Before?</th>
-                         <th class="text-center" scope="col">Drink Level</th>
-                       </tr>
-                     </thead>
-                     <tbody>
-                       <tr v-for="group in user.groups">
-                         <td class="text-center align-middle"> {{ group.label }} </td>
-                         <td class="text-center align-middle">{{ group.formatted.event_name }}</td>
-
-                         <td class="text-center align-middle"> {{ group.formatted.size }} </td>
-
-                         <td class="text-center align-middle">
-                           
-                         </td>
-
-                         <td class="text-center align-middle">
-                          
-                         </td>
-                         <td class="text-center align-middle">
-                         </td>
-                       </tr>
-                     </tbody>
-                   </table>
-
-
-
-
-
-
-
-
-
-
-
-                <h3> {{ user.name }}'s Groups</h3>
-                  <ol>
-                    <li style="font-size: 20px" v-for="group in user.groups">
-                      <router-link style="font-size: 20px;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
-                    </li>
-                    <li style="font-size: 20px" v-for="group in user.created_groups">
-                     <router-link style="font-size: 20px;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }} (ADMIN)</router-link>
-                     </li>
-                  </ol>
-
-                
                 <div v-if="user_id == user.id">
-                  <p>
-                    <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <p>
+                  <a class="btn btn-block btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                       Edit Your Profile
-                    </button>
+                    </a> 
                   </p>
                   <div class="collapse" id="collapseExample">
                     <div class="card card-body">
                       <form class="contact-form" v-on:submit.prevent="submit()">
                         <div class="form-group">
                             <label class="sr-only">Name</label>
-                            <input class="form-control" type="text" v-model="user.name">          
+                            <input class="form-control" type="text" v-model="user.name" required>          
                         </div>
 
                         <div class="form-group">
                             <label class="sr-only">Age</label>
-                            <input type="text" class="form-control" v-model="user.age">            
+                            <input type="text" class="form-control" v-model="user.age" required>            
                         </div>
 
                         <div class="form-group">
@@ -131,7 +66,7 @@
 
                         <div class="form-group">
                             <label class="sr-only">Location</label>
-                            <input type="text" class="form-control" v-model="user.location">
+                            <input type="text" class="form-control" v-model="user.location" required="">
                         </div>
 
                         <div class="form-group">
@@ -141,7 +76,7 @@
 
                         <div class="form-group">
                             <label class="sr-only">Summary</label>
-                            <input type="text" class="form-control" v-model="user.summary">
+                            <input type="text" class="form-control" v-model="user.summary" required="">
                         </div>
 
                         <div class="form-group">
@@ -160,14 +95,65 @@
                     </div>
                   </div>
                 </div>
-               
+              </div>
+            </div>
+          </div>
 
-            </section><!-- #newsletter -->      
+          <div class="col-md-8">
+           <highcharts :options="chartOptions"></highcharts>
+          </div>
+
+            <section class="section section-newsletter tab-pane fade in active col-md-6" id="newsletter">
+
+              <table>
+              <h3> {{ user.name }}'s Current Groups</h3>
+                <ol>
+                  <li v-for="group in user.groups">
+                    <router-link :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
+                  </li>
+                  <li v-for="group in user.created_groups">
+                   <router-link :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }} (ADMIN)</router-link>
+                   </li>
+                </ol>
+                </table>
+
+              </section><!-- #newsletter -->      
+
 
             <section class="col-md-6">
-              <h3>Events Attended</h3>
+             <h3>Currently Interested In Events</h3>
+              <div v-for="user_event in user.user_events">
+                <div v-if="user_event.confirmation_status !== 'attended'">
+                  <router-link :to="'/events/' + user_event.event_id"> {{ user_event.formatted_event.event }}
+                  </router-link>
+                </div>
+              </div>
+            </section>   
 
-            </section>         
+            <section class="section section-newsletter tab-pane fade in active col-md-6" id="newsletter"> 
+
+              <h3>Events Attended</h3>
+                  <p>
+                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseHello" aria-expanded="false" aria-controls="collapseExample">
+                      Show All Attended Events Below
+                    </button>
+                  </p>
+                  <div class="collapse" id="collapseHello">
+                    <div class="card card-body">
+                      <div v-for="user_event in user.user_events">
+                        <div v-if="user_event.confirmation_status === 'attended'">
+                          <p> {{ user_event.formatted_event.event }}
+                          {{ user_event.formatted_event.date }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+            </section>
+
+
 
         </div><!-- .middle.tab-content --> 
     </div><!-- .col-right --> 
@@ -258,6 +244,9 @@ export default {
                                             }
                                     }
                                     ],
+                          requested: {
+                                      confirmed: ""
+                                    },
                           formatted: {
                                       meet_before: "",
                                       drink_level: "",
@@ -338,7 +327,6 @@ export default {
       this.user = response.data;
       this.chartOptions.series[0].data.push(['Attended', this.user.user_events[0].events_attended]);
       this.chartOptions.series[0].data.push(['Not Attended', this.user.user_events[0].adjusted_interested_total]);
-
 
     });
   },

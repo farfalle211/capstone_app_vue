@@ -5,17 +5,14 @@
             <div class="middle">
                 <div class="inner">
                     <section class="section section-welcome">
+                      <h1>Attend</h1>
                         <ul class="navigation">
                           <li><router-link to="/">Home</router-link></li>
                           <li><router-link :to="'/users/' + user_id" >Profile</router-link></li>
-                          <li><router-link to="/login">Login</router-link></li>
                           <li><router-link to="/logout">Logout</router-link></li>
-                          <li><router-link to="/signup">Signup</router-link></li>
                         </ul>
-                        <h1>Attend</h1>
                         <div class="counter">
                         
-
                         </div>
                         <!-- end div .counter -->
                     </section>
@@ -25,10 +22,9 @@
     
     <div class="col-right">
         <div class="middle tab-content">                
-            <section class="section section-newsletter tab-pane fade in active " id="newsletter"> 
+             
            
               <div class="well">
-                
                 <h2>{{ event.name }}</h2>
                 <p>Date: {{ event.date }}</p>
                 <p>Category: {{ event.category }}</p>
@@ -37,25 +33,27 @@
               
 
                 <div v-if="!event.user_event_by_user">
-                  
                   <form v-on:submit.prevent="submit_interest()">
 
                    <div class="form-group">
                       <label>Have you purchased tickets? </label> 
                     <select class="form-control" v-model="newConfirmationStatus">
-                      <option value="not_purchased">Not Purchased</option>
+                      <option value="not_purchased"> Not Purchased</option>
                       <option value="purchased">Purchased</option>
                     </select>
                   </div>
-
                     <input type="submit" class="btn btn-primary" value="I'm interested!">
                   </form>
                 </div>
 
+
                 <div v-if="event.user_event_by_user">
+
+                  <button class="btn btn-block btn-danger" v-on:click="removeInterest(event.user_event_by_user.id)"> Remove Interest! </button>
+
                   <div v-if="event.user_event_by_user.distance_between">
                     <button class="btn btn-block btn-warning" v-on:click="checkIn(event.user_event_by_user.id)">Check In!</button> 
-                  </div>  
+                  </div>
 
                   <ul>
                     <li v-for="error in errors">{{ error }}</li>
@@ -100,25 +98,31 @@
              
 
 
-                <div class="well" v-if="event.user_event_by_user">
-                <!-- <button v-on:click="userEvent()">Show Groups</button> -->
-                  <div v-for="group in event.groups">
-                    <div v-if="(group.open === true) || (user_id == group.creater_id) || (group.requested) && (group.requested.confirmed === 'confirmed')">
-                      <router-link :to="'/groups/' + group.id">
-                        <h2 class="group-name">{{ group.label }}</h2>
-                      </router-link>
-                      <p>Remaining Group Capacity: {{ group.formatted.size }} </p>
-                      <p>Meet Before?: {{ group.formatted.meet_before }}</p>
-                      <p>Drink Amount: {{ group.formatted.drink_level }}</p>
-                    </div>
-                    <div else>
+
+            <div v-if="event.user_event_by_user">
+              <div v-for="group in event.groups">
+                <div v-if="(group.open === true) || (user_id == group.creater_id) || (group.requested) && (group.requested.confirmed === 'confirmed')">
+                  <div class="row">
+                      <div class="thumbnail">
+                        <div class="caption text-center">
+                          <router-link :to="'/groups/' + group.id"><h3 class="group-name">{{ group.label }}</h3>
+                          </router-link>
+                          <p>Group Capacity: {{ group.formatted.size }} </p>
+                          <p>Meet Before?: {{ group.formatted.meet_before }}</p>
+                          <p>Drink Amount: {{ group.formatted.drink_level }}</p>
+                          <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                        </div>
+                      </div>
                     </div>
                   </div>
+                  <div v-else>
+                    <h6>No Current Groups Exist!</h6>
+                  </div>
                 </div>
+              </div>
 
-               
-
-            </section><!-- #newsletter -->               
+            <!-- #newsletter -->   
+         
         </div><!-- .middle.tab-content --> 
     </div><!-- .col-right --> 
   </div>
@@ -234,7 +238,6 @@ export default {
 
   methods: {
     submit: function() {
-
       var user_id = localStorage.getItem("user_id");
       var params = {
         size: this.newGroupSize,
@@ -270,6 +273,17 @@ export default {
               this.errors = error.response.data.errors;
             });
           },
+
+        removeInterest: function(input_id) {
+          axios.
+            delete("/api/user_events/" + input_id)
+            .then(response => {
+              console.log(response.data);
+              this.event.user_event_by_user = "";
+            }).catch(error => {
+                this.errors = error.response.data.errors;
+            });
+        },
 
         currentCapacity: function(input) {
           console.log(input);
