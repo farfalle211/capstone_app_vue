@@ -18,9 +18,6 @@
                           <li><router-link to="/signup">Signup</router-link></li>
                         </ul>
                         <div class="counter">
-                          <h2> {{ user.name }} </h2>
-                          <p>{{ user.summary }}</p>
-
                           <!-- <highcharts :options="chartOptions"></highcharts> -->
 
                         </div>
@@ -30,29 +27,80 @@
             </div><!-- .middle --> 
         </div><!-- .col-left --> 
     
-    <div style="display: flex;" class="col-right">
-        <div style="flex: 1;" class="middle tab-content">
-          <img :src="user.image_url" alt="">
-           <highcharts :options="chartOptions"></highcharts>
-            <section style="flex: 1;" class="section section-newsletter tab-pane fade in active" id="newsletter"> 
 
-              <h3> {{ user.name }}'s Groups</h3>
-                <div v-for="group in user.groups">
+    <div class="col-right">
+        <div class="middle tab-content">
+          <div class="col-md-4">
+
+            <div class="thumbnail row">
+              <img class="img-circle" :src="user.image_url" alt="">
+              <div class="caption">
+                <h3>{{ user.name }}, {{ user.age }}, {{ user.location }}</h3>
+                <p>{{ user.summary }}</p>
+                <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-8">
+           <highcharts :options="chartOptions"></highcharts>
+          </div>
+
+            <section class="section section-newsletter tab-pane fade in active col-md-6" id="newsletter"> 
+
+
+                  <table class="table">
+                     <thead class="thead-light">
+                       <tr>
+                         <th class="text-center" scope="col">Group Name</th>
+                         <th class="text-center" scope="col">Event</th>
+                         <th class="text-center" scope="col">Capacity</th>
+                         <th class="text-center" scope="col">Meet Before?</th>
+                         <th class="text-center" scope="col">Drink Level</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <tr v-for="group in user.groups">
+                         <td class="text-center align-middle"> {{ group.label }} </td>
+                         <td class="text-center align-middle">{{ group.formatted.event_name }}</td>
+
+                         <td class="text-center align-middle"> {{ group.formatted.size }} </td>
+
+                         <td class="text-center align-middle">
+                           
+                         </td>
+
+                         <td class="text-center align-middle">
+                          
+                         </td>
+                         <td class="text-center align-middle">
+                         </td>
+                       </tr>
+                     </tbody>
+                   </table>
+
+
+
+
+
+
+
+
+
+
+
+                <h3> {{ user.name }}'s Groups</h3>
                   <ol>
-                    <li style="font-size: 20px">
-                      <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
+                    <li style="font-size: 20px" v-for="group in user.groups">
+                      <router-link style="font-size: 20px;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
                     </li>
+                    <li style="font-size: 20px" v-for="group in user.created_groups">
+                     <router-link style="font-size: 20px;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }} (ADMIN)</router-link>
+                     </li>
                   </ol>
-                </div>
-             
-                  <ol>
-                   <li style="font-size: 20px" v-for="group in user.created_groups">
-                    <router-link style="font-size: 20px; text-decoration: underline;" :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }} (ADMIN)</router-link>
-                  </li>
-                </ol>
+
                 
                 <div v-if="user_id == user.id">
-
                   <p>
                     <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                       Edit Your Profile
@@ -114,13 +162,31 @@
                 </div>
                
 
-            </section><!-- #newsletter -->               
+            </section><!-- #newsletter -->      
+
+            <section class="col-md-6">
+              <h3>Events Attended</h3>
+
+            </section>         
+
         </div><!-- .middle.tab-content --> 
     </div><!-- .col-right --> 
   </div>
 </template>
 
 <style>
+
+.highcharts-data-table td, .highcharts-data-table th {
+  border-bottom: dashed lightblue 1px;
+  padding: 10px 20px;
+  margin: 5px;
+}
+
+.highcharts-data-table {
+  margin: 30px 30px 30px 235px;
+}
+
+
   
 </style>
 
@@ -217,7 +283,7 @@ export default {
                     borderColor: 'black'
                   },
                   title: {
-                    text: 'Attended<br>Stats',
+                    text: 'Attended Stats',
                     align: 'center',
                     verticalAlign: 'middle',
                     y: 40
@@ -226,6 +292,7 @@ export default {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
                   },
                   exporting: { 
+                    showTable: true,
                     enabled: false 
                   },
                   plotOptions: {
@@ -246,7 +313,7 @@ export default {
                   },
                   series: [{
                     type: 'pie',
-                    name: 'Percentage',
+                    name: 'Count',
                     innerSize: '50%',
                     data: [
                       // ['Attended', 4],

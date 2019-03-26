@@ -25,12 +25,15 @@
     
     <div class="col-right">
         <div class="middle tab-content">                
-            <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
+            <section class="section section-newsletter tab-pane fade in active " id="newsletter"> 
            
-              <h2>{{ event.name }}</h2>
-              <p>Date: {{ event.date }}</p>
-              <p>Category: {{ event.category }}</p>
-              <p>Location: {{ event.location }}</p>
+              <div class="well">
+                
+                <h2>{{ event.name }}</h2>
+                <p>Date: {{ event.date }}</p>
+                <p>Category: {{ event.category }}</p>
+                <p>Location: {{ event.location }}</p>
+              </div>
               
 
                 <div v-if="!event.user_event_by_user">
@@ -94,13 +97,15 @@
                 </div>
               </div>
               <div class="separator"></div>
-              <h2>Current Groups</h2>
-                <div v-if="event.user_event_by_user">
+             
+
+
+                <div class="well" v-if="event.user_event_by_user">
                 <!-- <button v-on:click="userEvent()">Show Groups</button> -->
                   <div v-for="group in event.groups">
                     <div v-if="(group.open === true) || (user_id == group.creater_id) || (group.requested) && (group.requested.confirmed === 'confirmed')">
                       <router-link :to="'/groups/' + group.id">
-                        <h2>{{ group.label }}</h2>
+                        <h2 class="group-name">{{ group.label }}</h2>
                       </router-link>
                       <p>Remaining Group Capacity: {{ group.formatted.size }} </p>
                       <p>Meet Before?: {{ group.formatted.meet_before }}</p>
@@ -124,8 +129,12 @@
     color: black;
   }
 
-  h2 {
+  h2.group-name {
     color: black;
+  }
+
+  h2.group-name:hover {
+    color: blue;
   }
 
 </style>

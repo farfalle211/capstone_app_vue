@@ -152,11 +152,14 @@ ul
 
 .col-right
 {
-    display: table;
+    /*display: table;*/
     float: right;
 
     width: 70%;
     height: 100%;
+    position: fixed;
+    left: 30%;
+    overflow-y: auto;
 }
 
 .col-right a:hover
