@@ -34,17 +34,37 @@
                   <h1>{{ group.label }}</h1>
                   <router-link :to="'/events/' + group.event_id">
                     <h4 class="block-title">{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h4>
+                    <h5 class="block-title">{{ group.formatted.event_location}}</h5>
                   </router-link>
-                  <p>Administrator: {{ group.creater.name }}</p>
-                  <p style="display: inline;">Current Group Capacity: <p style="font-weight: bold; display: inline;"> {{ group.formatted.size }}</p> </p>
-                  <p>Getting {{ group.formatted.meet_before }}</p>
-                  <p>Drink Level: {{ group.formatted.drink_level }}</p>
+
+                  <table style="margin-top: 20px" class="table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>Administrator</th>
+                        <th>Current Group Capacity</th>
+                        <th>Meeting Before</th>
+                        <th>Drink Level</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{group.creater.name}}</td>
+                        <td style="font-weight: bold;">{{group.formatted.size}}</td>
+                        <td>{{group.formatted.meet_before}}</td>
+                        <td>{{group.formatted.drink_level}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
                   <div v-if="group.creater_id == user_id">
                     <p>
                       <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         Edit Your Group!
                       </button>
-                      <a href="#" v-on:click="popUp()" style="margin-left: 15px" class="btn btn-warning" role="button">Delete Group</a>
+                      <button class="btn btn-info" style="margin-left: 70px" type="button" data-toggle="collapse" data-target="#collapseRequest" aria-expanded="false" aria-controls="collapseExample">
+                        User Requests
+                      </button>
+                      <a href="#" v-on:click="popUp()" style="margin-left: 70px" class="btn btn-danger" role="button">Delete Group</a>
                     </p>
                     <div class="collapse" id="collapseExample">
                       <div class="card card-body">
@@ -80,6 +100,22 @@
                           </form>
                         </div>
                       </div>
+                    </div>
+                    <div class="collapse" id="collapseRequest">
+                      <div class="card card-body">
+                        <div v-if="(group.creater_id == user_id) && group.open === true">
+                          <h2>Current User Requests: </h2>
+                          <div v-for="request in group.requests">
+                            <div v-if="request.confirmed === 'confirmed'"></div>
+                            <div v-else-if="request.confirmed === 'pending'">
+                              <li style="font-size: 18px; margin-bottom: 10px;">{{ request.user.name }}<button style="margin-left: 10px" v-on:click="confirmRequest(request.id)" class="btn btn-sm btn-success">Confirm Request</button></li>
+                            </div>
+                            <div v-else>
+                              No Current User Requests
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>       
                   </div>
                 </div>
@@ -101,47 +137,7 @@
             <button v-on:click="destroyRequest()" class="btn btn-danger">Delete Join Request</button>
           </div>
           </div>
-
-          <div v-if="(group.creater_id == user_id) && group.open === true">
-            <h2>Current User Requests: </h2>
-            <div v-for="request in group.requests">
-              <div v-if="request.confirmed === 'confirmed'"></div>
-              <div v-else-if="request.confirmed === 'pending'">
-                <li>{{ request.user.name }}</li>
-                  <button v-on:click="confirmRequest(request.id)" class="btn btn-success">Confirm Request</button>
-              </div>
-              <div v-else>
-                No Current User Requests
-              </div>
-            </div>
-          </div><br>
          
-          <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
-            <h2>Group Members: </h2> 
-            <ol>
-              <li class="li-styling">
-                <router-link :to="'/users/' + group.creater_id">
-               {{ group.creater.name }},
-               {{ group.creater.age }},
-               {{ group.creater.location }} --
-               </router-link> 
-               <h4 style="display: inline;">Group Admin</h4>
-             </li>
-           
-             <div v-for="request in group.requests">
-               <li class="li-styling" v-if="request.confirmed === 'confirmed'">
-                <router-link :to="'/users/' + request.user.id">
-                   {{ request.user.name }},
-                   {{ request.user.age }},
-                   {{ request.user.location }}
-                 </router-link>
-                 <div v-if="group.creater_id == user_id" style="display: inline">
-                   <button class="btn btn-danger btn-sm" v-on:click="removeUser(request.id)">Remove User</button>
-                 </div>
-               </li>
-             </div>  
-             </ol>
-          </div>
           <div class="separator"></div>
 
           <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
@@ -158,7 +154,7 @@
 
             <div v-if="textStatus === 'late'">
               <div>
-                <div style="padding-bottom: 10px; display:inline;">
+                <div style="padding-bottom: 10px; display:inline; font-size: 18px">
                 Running: <input style="color: black;" type="number" v-model="numberOfMinutes"> Minutes Late!
                 <span> 
                   <button style="margin-left: 15px;" class="btn btn-primary" v-on:click="imLate()">Send!</button>
@@ -169,7 +165,7 @@
             <div v-else>
               <div class="form-group">
                   <label class="sr-only">Message</label>
-                  <textarea style="color: black;" v-model="userMessage" rows="4" cols="40" placeholder="Enter your message" required=""></textarea>
+                  <textarea style="color: black;" v-model="userMessage" rows="5" cols="55" placeholder="Enter your message" required=""></textarea>
               </div>
               <!-- Message: <input style="color: black;" v-model="userMessage"> -->
 
@@ -193,6 +189,40 @@
         </div>
       </div>
 
+      <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
+        <div class="thumbnail col-md-6">
+          <div class="caption text-center">
+            <h2>Group Members</h2>
+            <table style="margin-top: 20px" class="table">
+              <thead class="thead-light text-center">
+                <tr>
+                  <th class="text-center">Name</th>
+                  <th class="text-center">Age</th>
+                  <th class="text-center">Location</th>
+                  <th class="text-center">Phone Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><router-link :to="'/users/' + group.creater_id">{{group.creater.name}}</router-link></td>
+                  <td>{{group.creater.age}}</td>
+                  <td>{{group.creater.location}}</td>
+                  <td>{{group.creater.phone_number}}</td>
+                </tr>
+                <tr v-for="request in group.requests" v-if="request.confirmed === 'confirmed'">
+                  <td><router-link :to="'/users/' + request.user.id">{{request.user.name}}</router-link></td>
+                  <td>{{request.user.age}}</td>
+                  <td>{{request.user.location}}</td>
+                  <td>{{request.user.phone_number}}</td>
+                  <td v-if="group.creater_id == user_id"><button class="btn btn-danger btn-sm" v-on:click="removeUser(request.id)">Remove User</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+
     </div><!-- .col-right --> 
   </div>
 </template>
@@ -206,6 +236,15 @@
     font-size: 20px;
   }
 
+  .btn-sm {
+    padding: 5px;
+    font-size: 15px;
+  }
+
+  .btn-md {
+    padding: 8px;
+    font-size: 15px;
+  }
 
 </style>
 
