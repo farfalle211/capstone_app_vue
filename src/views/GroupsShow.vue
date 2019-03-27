@@ -27,59 +27,64 @@
     <div class="col-right pl-4">
       <div class="row">
         <div class="middle tab-content col-md-6">
-          <h4 v-if="group.creater_id == user_id">You are the Admin of this Group</h4>
-          <h1>{{ group.label }}</h1>
-          <router-link style="text-decoration: underline;" :to="'/events/' + group.event_id">
-            <h2>{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h2>
-          </router-link>
-          <p style="display: inline;">Current Group Capacity: <p style="font-weight: bold; display: inline;"> {{ group.formatted.size }}</p> </p>
-          <p>Meeting Before For: {{ group.formatted.meet_before }}</p>
-          <p>Drink Level: {{ group.formatted.drink_level }}</p>
 
-
-          <div v-if="group.creater_id == user_id">
-            <p>
-              <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                Edit Your Group!
-              </button>
-            </p>
-            <div class="collapse" id="collapseExample">
-              <div class="card card-body">
-                <form v-on:submit.prevent="editGroup()">
-                  <p>Label: <input class="form-control" type="text" v-model="group.label"></p>
-                  <p>Size: <input class="form-control" type="text" v-model="group.size"></p>
-
-                    <div class="form-group">
-                      <label>Meet Before Options: </label> 
-                      <select class="form-control" v-model="group.meet_before" name="meet_before">
-                        <option class="form-control" value="drinks">Drinks</option>
-                        <option class="form-control" value="dinner">Dinner</option>
-                        <option class="form-control" value="dinner_and_drinks">Dinner and Drinks</option>
-                      </select>
-                    </div>
-
-                    <p class="form-group">
-                      <label>Drink Level: </label> 
-                    <select class="form-control" v-model="group.drink_level" name="drink_level">
-                      <option class="form-control" value="sober">Sober</option>
-                      <option class="form-control" value="one_to_two">One to Two</option>
-                      <option class="form-control" value="three_or_more">Three or more</option>
-                    </select>
+          <div style="padding-left: 20px" class="row">
+            <div class="thumbnail">
+                <div class="caption">
+                  <h1>{{ group.label }}</h1>
+                  <p>Admin: {{ group.creater.name }}</p>
+                  <router-link :to="'/events/' + group.event_id">
+                    <h4 class="block-title">{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h4>
+                  </router-link>
+                  <p style="display: inline;">Current Group Capacity: <p style="font-weight: bold; display: inline;"> {{ group.formatted.size }}</p> </p>
+                  <p>Getting {{ group.formatted.meet_before }}</p>
+                  <p>Drink Level: {{ group.formatted.drink_level }}</p>
+                  <div v-if="group.creater_id == user_id">
+                    <p>
+                      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Edit Your Group!
+                      </button>
+                      <a href="#" v-on:click="popUp()" style="margin-left: 15px" class="btn btn-warning" role="button">Delete Group</a>
                     </p>
+                    <div class="collapse" id="collapseExample">
+                      <div class="card card-body">
+                        <form v-on:submit.prevent="editGroup()">
+                          <p>Label: <input class="form-control" type="text" v-model="group.label"></p>
+                          <p>Size: <input class="form-control" type="text" v-model="group.size"></p>
 
-                    <input type="submit" data-target="#collapseExample" value="Edit Group" class="btn btn-block btn-primary">
+                            <div class="form-group">
+                              <label>Meet Before Options: </label> 
+                              <select class="form-control" v-model="group.meet_before" name="meet_before">
+                                <option class="form-control" value="drinks">Drinks</option>
+                                <option class="form-control" value="dinner">Dinner</option>
+                                <option class="form-control" value="dinner_and_drinks">Dinner and Drinks</option>
+                              </select>
+                            </div>
 
-                    <div class="alert-message">
-                      <ul>
-                        <li class="text-danger" v-for="error in errors">{{ error }}</li>
-                      </ul>
-                    </div>
-                  </form>
+                            <p class="form-group">
+                              <label>Drink Level: </label> 
+                            <select class="form-control" v-model="group.drink_level" name="drink_level">
+                              <option class="form-control" value="sober">Sober</option>
+                              <option class="form-control" value="one_to_two">One to Two</option>
+                              <option class="form-control" value="three_or_more">Three or more</option>
+                            </select>
+                            </p>
+
+                            <input type="submit" data-target="#collapseExample" value="Edit Group" class="btn btn-block btn-primary">
+
+                            <div class="alert-message">
+                              <ul>
+                                <li class="text-danger" v-for="error in errors">{{ error }}</li>
+                              </ul>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>       
+                  </div>
                 </div>
               </div>
-            <button class="btn btn-block btn-warning" v-on:click="popUp()">Delete Group</button>   
-          </div>       
-        </div>
+            </div>
         
         <div class="middle tab-content col-md-6">
          <div v-if="!group.requested && (group.creater_id != user_id) && group.open === true">
@@ -131,7 +136,7 @@
                    {{ request.user.location }}
                  </router-link>
                  <div v-if="group.creater_id == user_id" style="display: inline">
-                   <button v-on:click="removeUser(request.id)">Remove User</button>
+                   <button class="btn btn-danger btn-sm" v-on:click="removeUser(request.id)">Remove User</button>
                  </div>
                </li>
              </div>  
@@ -182,8 +187,6 @@
                   <button class="btn btn-primary" v-on:click="sendMessage('group')">Send!</button>
                 </div>
             </div>
-
-
 
 
           </div>

@@ -23,11 +23,10 @@
         <div class="middle tab-content">                
              
            
-
           <div class="row">
             <div class="thumbnail">
               <div class="caption text-center">
-                <h2>{{ event.name }}</h2>
+                <h4 class="block-title">{{ event.name }}</h4>
                 <p>Date: {{ event.date }}</p>
                 <p>Category: {{ event.category }}</p>
                 <p>Location: {{ event.location }}</p>
@@ -167,11 +166,6 @@
 
   .btn-block {
     margin: 10px;
-  }
-
-  .col-right {
-    padding-left: 120px;
-    padding-top: 20px;
   }
 
 </style>

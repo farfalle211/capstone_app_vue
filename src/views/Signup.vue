@@ -5,13 +5,13 @@
         <div class="middle">
             <div class="inner">
                 <section class="section section-welcome">
+                  <h1>Attend</h1>
                     <ul class="navigation">
                       <li><router-link to="/">Home</router-link></li>
                       <li><router-link to="/login">Login</router-link></li>
                       <li><router-link to="/logout">Logout</router-link></li>
                       <li><router-link to="/signup">Signup</router-link> </li>
                     </ul>
-                    <h1>Attend</h1>
                     <div class="counter">
                     </div>
                     <!-- end div .counter -->
