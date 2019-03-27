@@ -21,34 +21,34 @@
     
     <div class="col-right">
         <div class="middle tab-content">                
-            <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
+             
                 
                 <h2>Login</h2>                    
 
                 <div class="separator"></div>
-                <form class="contact-form" v-on:submit.prevent="submit()">
-                    <div class="form-group">
+
+                <form v-on:submit.prevent="submit()">
+
+                    <div class="form-group center-block group-new-form">
                         <label class="sr-only">Email</label>
-                        <input class="form-control" type="email" v-model="email" placeholder="E-mail*">                              
+                        <input class="form-control" type="email" v-model="email" placeholder="E-mail*"> 
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group center-block group-new-form">
                         <label class="sr-only">Password</label>
                         <input type="password" class="form-control" v-model="password" placeholder="Password*">            
                     </div>
-                    <div class="text-center">
+                    <div class="form-group center-block group-new-form">
                         <button type="submit" class="btn btn-block btn-main">Submit</button>
                     </div>
+
                     <div class="alert-message">
                       <ul>
                         <li v-for="error in errors">{{ error }}</li>
                       </ul>
                     </div>
                 </form>            
-            </section><!-- #newsletter -->
-            
-            <section class="section tab-pane fade" id="services">
       
-            </section><!-- #services -->
             
         </div><!-- .middle.tab-content --> 
 

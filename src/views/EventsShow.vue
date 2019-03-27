@@ -38,11 +38,11 @@
 
                     <a href="#" v-on:click="removeInterest(event.user_event_by_user.id)" class="btn btn-danger" role="button">Remove Interest</a></p>
 
-                    <p v-if="event.user_event_by_user.confirmation_status === 'attended'">You're checked in!</p>
-                    <p v-else-if="confirmAttended === true">You've checked in successfully!</p>
+                    <p v-if="event.user_event_by_user.confirmation_status === 'attended'" style="color: green;">You're checked in!</p>
+                    <p v-else-if="confirmAttended === true" style="color: green;">You've checked in successfully!</p>
 
                     <p v-else-if="event.user_event_by_user.distance_between">You can check into the event</p>
-                    <p v-else>Sorry, you're not within check-in range.</p>
+                    <p v-else style="color: red;">Sorry, you're not within check-in range.</p>
                 </div>
               </div>
             </div>
@@ -79,7 +79,7 @@
                       <form v-on:submit.prevent="submit()">
 
                         <div class="form-group center-block group-new-form">
-                          <label class="display-label" >Label: </label>
+                          <label class="display-label">Label: </label>
                           <input class="form-control center-block" type="text" v-model="newGroupLabel">
                         </div>
 
@@ -111,9 +111,7 @@
                   </div>
                 </div>
               </div>
-              <div class="separator"></div>
             
-
 
             <div v-if="event.user_event_by_user">
               <div v-for="group in event.groups">
@@ -121,7 +119,7 @@
                   <div class="row">
                     <div class="thumbnail">
                         <div class="caption text-center">
-                          <router-link :to="'/groups/' + group.id"><h2 class="group-name">{{ group.label }}</h2>
+                          <router-link :to="'/groups/' + group.id"><h3 class="group-name">{{ group.label }}</h3>
                           </router-link>
                           <p>Group Capacity: {{ group.formatted.size }} </p>
                           <p>Meet Before?: {{ group.formatted.meet_before }}</p>
@@ -144,7 +142,7 @@
                     </div>
                   </div>
                   <div v-else>
-                    <h6>No Current Groups Exist!</h6>
+                    <h5 style="text-align: center;">No Current Groups Exist!</h5>
                   </div>
                 </div>
               </div>
@@ -175,11 +173,11 @@
     color: black;
   }
 
-  h2.group-name {
+  h3.group-name {
     color: white;
   }
 
-  h2.group-name:hover {
+  h3.group-name:hover {
     color: blue;
   }
 

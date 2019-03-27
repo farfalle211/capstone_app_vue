@@ -32,10 +32,10 @@
             <div class="thumbnail">
                 <div class="caption">
                   <h1>{{ group.label }}</h1>
-                  <p>Admin: {{ group.creater.name }}</p>
                   <router-link :to="'/events/' + group.event_id">
                     <h4 class="block-title">{{ group.formatted.event_name }} <br> ({{group.formatted.event_date}})</h4>
                   </router-link>
+                  <p>Administrator: {{ group.creater.name }}</p>
                   <p style="display: inline;">Current Group Capacity: <p style="font-weight: bold; display: inline;"> {{ group.formatted.size }}</p> </p>
                   <p>Getting {{ group.formatted.meet_before }}</p>
                   <p>Drink Level: {{ group.formatted.drink_level }}</p>
@@ -103,7 +103,7 @@
           </div>
 
           <div v-if="(group.creater_id == user_id) && group.open === true">
-            <h5>Current User Requests: </h5>
+            <h2>Current User Requests: </h2>
             <div v-for="request in group.requests">
               <div v-if="request.confirmed === 'confirmed'"></div>
               <div v-else-if="request.confirmed === 'pending'">
@@ -179,12 +179,12 @@
                     <option v-for="request in group.requests" v-bind:value="request.user.phone_number">{{ request.user.name }}</option>
                     <option v-bind:value="group.creater.phone_number">{{ group.creater.name }}</option>
                   </select>
-
-                  <button class="btn btn-primary" v-on:click="sendMessage('solo')">Send!</button>
+                  <div style="padding-top: 10px">
+                    <button class="btn btn-primary" v-on:click="sendMessage('solo')">Send to individual member!</button>
+                  </div>
                 </div>
-                <div>
-                  Send message to all users:
-                  <button class="btn btn-primary" v-on:click="sendMessage('group')">Send!</button>
+                <div style="padding-top: 10px">
+                  <button class="btn btn-primary" v-on:click="sendMessage('group')">Send to all members!</button>
                 </div>
             </div>
 

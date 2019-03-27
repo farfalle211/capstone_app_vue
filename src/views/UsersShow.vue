@@ -13,7 +13,6 @@
                         <ul class="navigation">
                           <li><router-link to="/">Home</router-link></li>
                           <li><router-link to="/logout">Logout</router-link></li>
-                          <li><router-link to="/signup">Signup</router-link></li>
                         </ul>
                         <div class="counter">
                           <!-- <highcharts :options="chartOptions"></highcharts> -->
@@ -35,7 +34,7 @@
               <div class="caption">
                 <h3>{{ user.name }}, {{ user.age }}, {{ user.location }}</h3>
                 <p>{{ user.summary }}</p>
-                <div v-if="user_id == user.id">
+                <div v-if="user_id == user.id" style="text-align: center;">
                 <p>
                   <a class="btn btn-block btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                       Edit Your Profile
@@ -43,7 +42,7 @@
                   </p>
                   <div class="collapse" id="collapseExample">
                     <div class="card card-body">
-                      <form class="contact-form" v-on:submit.prevent="submit()">
+                      <form v-on:submit.prevent="submit()">
                         <div class="form-group">
                             <label class="sr-only">Name</label>
                             <input class="form-control" type="text" v-model="user.name" required>          
@@ -107,14 +106,12 @@
 
               <table>
               <h3> {{ user.name }}'s Current Groups</h3>
-                <ol>
-                  <li v-for="group in user.groups">
-                    <router-link :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
-                  </li>
-                  <li v-for="group in user.created_groups">
-                   <router-link :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }} (ADMIN)</router-link>
-                   </li>
-                </ol>
+                <li v-for="group in user.groups">
+                  <router-link :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }}</router-link>
+                </li>
+                <li v-for="group in user.created_groups">
+                 <router-link :to="'/groups/' + group.id">{{ group.label }} -- {{ group.formatted.event_name }} (ADMIN)</router-link>
+                 </li>
                 </table>
 
               </section><!-- #newsletter -->      

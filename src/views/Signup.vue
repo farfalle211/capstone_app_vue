@@ -9,8 +9,6 @@
                     <ul class="navigation">
                       <li><router-link to="/">Home</router-link></li>
                       <li><router-link to="/login">Login</router-link></li>
-                      <li><router-link to="/logout">Logout</router-link></li>
-                      <li><router-link to="/signup">Signup</router-link> </li>
                     </ul>
                     <div class="counter">
                     </div>
@@ -22,11 +20,11 @@
 
     <div class="col-right">
         <div class="middle tab-content">                
-            <section class="section section-newsletter tab-pane fade in active" id="newsletter"> 
+
+              <h2>Sign Up for An Account! </h2>
 
               <div class="separator"></div>
 
-              <h2>Sign Up for An Account! </h2>
               <form class="contact-form" id="contact-form" v-on:submit.prevent="submit()">
                   <div class="form-group">
                       <label class="sr-only">Name</label>
@@ -88,8 +86,6 @@
                     </ul>
                   </div>
               </form>
-
-            </section>
 
           </div>
         </div>
