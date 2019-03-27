@@ -120,6 +120,41 @@
                   </div>
                 </div>
               </div>
+
+
+                <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')" class="row" style="padding-left: 20px">
+                  <div class="thumbnail">
+                    
+                  <div class="caption text-center">
+                    <h2>Group Members</h2>
+                    <table style="margin-top: 20px" class="table">
+                      <thead class="thead-light text-center">
+                        <tr>
+                          <th class="text-center">Name</th>
+                          <th class="text-center">Age</th>
+                          <th class="text-center">Location</th>
+                          <th class="text-center">Phone Number</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><router-link :to="'/users/' + group.creater_id">{{group.creater.name}}</router-link></td>
+                          <td>{{group.creater.age}}</td>
+                          <td>{{group.creater.location}}</td>
+                          <td>{{group.creater.phone_number}}</td>
+                        </tr>
+                        <tr v-for="request in group.requests" v-if="request.confirmed === 'confirmed'">
+                          <td><router-link :to="'/users/' + request.user.id">{{request.user.name}}</router-link></td>
+                          <td>{{request.user.age}}</td>
+                          <td>{{request.user.location}}</td>
+                          <td>{{request.user.phone_number}}</td>
+                          <td v-if="group.creater_id == user_id"><button class="btn btn-danger btn-sm" v-on:click="removeUser(request.id)">Remove User</button></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
         
         <div class="middle tab-content col-md-6">
@@ -155,7 +190,7 @@
             <div v-if="textStatus === 'late'">
               <div>
                 <div style="padding-bottom: 10px; display:inline; font-size: 18px">
-                Running: <input style="color: black;" type="number" v-model="numberOfMinutes"> Minutes Late!
+                Running: <input class="form-control form-control-inline" type="number" v-model="numberOfMinutes"> Minutes Late!
                 <span> 
                   <button style="margin-left: 15px;" class="btn btn-primary" v-on:click="imLate()">Send!</button>
                 </span>
@@ -165,7 +200,7 @@
             <div v-else>
               <div class="form-group">
                   <label class="sr-only">Message</label>
-                  <textarea style="color: black;" v-model="userMessage" rows="5" cols="55" placeholder="Enter your message" required=""></textarea>
+                  <textarea class="form-control" v-model="userMessage" rows="5" cols="55" placeholder="Enter your message" required=""></textarea>
               </div>
               <!-- Message: <input style="color: black;" v-model="userMessage"> -->
 
@@ -184,43 +219,11 @@
                 </div>
             </div>
 
-
           </div>
         </div>
       </div>
 
-      <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
-        <div class="thumbnail col-md-6">
-          <div class="caption text-center">
-            <h2>Group Members</h2>
-            <table style="margin-top: 20px" class="table">
-              <thead class="thead-light text-center">
-                <tr>
-                  <th class="text-center">Name</th>
-                  <th class="text-center">Age</th>
-                  <th class="text-center">Location</th>
-                  <th class="text-center">Phone Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><router-link :to="'/users/' + group.creater_id">{{group.creater.name}}</router-link></td>
-                  <td>{{group.creater.age}}</td>
-                  <td>{{group.creater.location}}</td>
-                  <td>{{group.creater.phone_number}}</td>
-                </tr>
-                <tr v-for="request in group.requests" v-if="request.confirmed === 'confirmed'">
-                  <td><router-link :to="'/users/' + request.user.id">{{request.user.name}}</router-link></td>
-                  <td>{{request.user.age}}</td>
-                  <td>{{request.user.location}}</td>
-                  <td>{{request.user.phone_number}}</td>
-                  <td v-if="group.creater_id == user_id"><button class="btn btn-danger btn-sm" v-on:click="removeUser(request.id)">Remove User</button></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+
       
 
     </div><!-- .col-right --> 
@@ -244,6 +247,11 @@
   .btn-md {
     padding: 8px;
     font-size: 15px;
+  }
+
+  .form-control-inline {
+    display: inherit;
+    width: 140px;
   }
 
 </style>

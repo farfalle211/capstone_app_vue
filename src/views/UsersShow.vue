@@ -27,81 +27,84 @@
 
     <div class="col-right">
         <div class="middle tab-content">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="thumbnail row">
+                <img class="img-circle" :src="user.image_url" alt="">
+                <div class="caption">
+                  <h3>{{ user.name }}, {{ user.age }}, {{ user.location }}</h3>
+                  <p>{{ user.summary }}</p>
+                  <div v-if="user_id == user.id" style="text-align: center;">
+                  <p>
+                    <a class="btn btn-block btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        Edit Your Profile
+                      </a> 
+                    </p>
+                    <div class="collapse" id="collapseExample">
+                      <div class="card card-body">
+                        <form v-on:submit.prevent="submit()">
+                          <div class="form-group">
+                              <label class="sr-only">Name</label>
+                              <input class="form-control" type="text" v-model="user.name" required>          
+                          </div>
 
-          <div class="col-md-4">
-            <div class="thumbnail row">
-              <img class="img-circle" :src="user.image_url" alt="">
-              <div class="caption">
-                <h3>{{ user.name }}, {{ user.age }}, {{ user.location }}</h3>
-                <p>{{ user.summary }}</p>
-                <div v-if="user_id == user.id" style="text-align: center;">
-                <p>
-                  <a class="btn btn-block btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                      Edit Your Profile
-                    </a> 
-                  </p>
-                  <div class="collapse" id="collapseExample">
-                    <div class="card card-body">
-                      <form v-on:submit.prevent="submit()">
-                        <div class="form-group">
-                            <label class="sr-only">Name</label>
-                            <input class="form-control" type="text" v-model="user.name" required>          
-                        </div>
+                          <div class="form-group">
+                              <label class="sr-only">Age</label>
+                              <input type="text" class="form-control" v-model="user.age" required>            
+                          </div>
 
-                        <div class="form-group">
-                            <label class="sr-only">Age</label>
-                            <input type="text" class="form-control" v-model="user.age" required>            
-                        </div>
+                          <div class="form-group">
+                              <label class="sr-only">Gender</label>
+                              <label class="radio-inline">
+                                  <input type="radio" class="checkmark" value="male" v-model="user.gender" checked>Male
+                              </label>
+                              <label class="radio-inline">
+                                  <input type="radio" class="checkmark" value="female" v-model="user.gender">Female
+                              </label>
+                          </div>
 
-                        <div class="form-group">
-                            <label class="sr-only">Gender</label>
-                            <label class="radio-inline">
-                                <input type="radio" class="checkmark" value="male" v-model="user.gender" checked>Male
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" class="checkmark" value="female" v-model="user.gender">Female
-                            </label>
-                        </div>
+                          <div class="form-group">
+                              <label class="sr-only">Location</label>
+                              <input type="text" class="form-control" v-model="user.location" required="">
+                          </div>
 
-                        <div class="form-group">
-                            <label class="sr-only">Location</label>
-                            <input type="text" class="form-control" v-model="user.location" required="">
-                        </div>
+                          <div class="form-group">
+                              <label class="sr-only">Phone Number</label>
+                              <input type="text" class="form-control" v-model="user.phone_number" placeholder="+13042227896">
+                          </div>
 
-                        <div class="form-group">
-                            <label class="sr-only">Phone Number</label>
-                            <input type="text" class="form-control" v-model="user.phone_number" placeholder="+13042227896">
-                        </div>
+                          <div class="form-group">
+                              <label class="sr-only">Summary</label>
+                              <input type="text" class="form-control" v-model="user.summary" required="">
+                          </div>
 
-                        <div class="form-group">
-                            <label class="sr-only">Summary</label>
-                            <input type="text" class="form-control" v-model="user.summary" required="">
-                        </div>
+                          <div class="form-group">
+                              <label class="sr-only">Image</label>
+                              <input type="file" v-on:change="setFile($event)" ref="fileInput">
+                          </div>
 
-                        <div class="form-group">
-                            <label class="sr-only">Image</label>
-                            <input type="file" v-on:change="setFile($event)" ref="fileInput">
-                        </div>
+                          <input type="submit" value="Update" class="btn btn-block btn-primary">
 
-                        <input type="submit" value="Update" class="btn btn-block btn-primary">
-
-                        <div class="alert-message">
-                          <ul>
-                            <li v-for="error in errors">{{ error }}</li>
-                          </ul>
-                        </div>
-                      </form> 
+                          <div class="alert-message">
+                            <ul>
+                              <li v-for="error in errors">{{ error }}</li>
+                            </ul>
+                          </div>
+                        </form> 
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            <div class="col-md-8">
+             <highcharts :options="chartOptions"></highcharts>
+            </div>
+            
           </div>
 
-          <div class="col-md-8">
-           <highcharts :options="chartOptions"></highcharts>
-          </div>
-
+          <div class="row">
             <section class="section section-newsletter tab-pane fade in active col-md-6" id="newsletter">
 
               <table>
@@ -114,7 +117,7 @@
                  </li>
                 </table>
 
-              </section><!-- #newsletter -->      
+            </section><!-- #newsletter -->      
 
 
             <section class="col-md-6">
@@ -125,8 +128,10 @@
                   </router-link>
                 </div>
               </div>
-            </section>   
-
+            </section>              
+          </div>
+ 
+          <div class="row">
             <section class="section section-newsletter tab-pane fade in active col-md-6" id="newsletter"> 
 
               <h3>Events Attended</h3>
@@ -148,7 +153,9 @@
 
 
 
-            </section>
+            </section>            
+          </div>
+
 
 
 
