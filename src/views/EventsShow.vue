@@ -12,7 +12,6 @@
                           <li><router-link to="/logout">Logout</router-link></li>
                         </ul>
                         <div class="counter">
-                        
                         </div>
                         <!-- end div .counter -->
                     </section>
@@ -24,43 +23,55 @@
         <div class="middle tab-content">                
              
            
-              <div class="well">
+
+          <div class="row">
+            <div class="thumbnail">
+              <div class="caption text-center">
                 <h2>{{ event.name }}</h2>
                 <p>Date: {{ event.date }}</p>
                 <p>Category: {{ event.category }}</p>
                 <p>Location: {{ event.location }}</p>
-              </div>
-              
-
-                <div v-if="!event.user_event_by_user">
-                  <form v-on:submit.prevent="submit_interest()">
-
-                   <div class="form-group">
-                      <label>Have you purchased tickets? </label> 
-                    <select class="form-control" v-model="newConfirmationStatus">
-                      <option value="not_purchased"> Not Purchased</option>
-                      <option value="purchased">Purchased</option>
-                    </select>
-                  </div>
-                    <input type="submit" class="btn btn-primary" value="I'm interested!">
-                  </form>
-                </div>
 
 
                 <div v-if="event.user_event_by_user">
 
-                  <button class="btn btn-block btn-danger" v-on:click="removeInterest(event.user_event_by_user.id)"> Remove Interest! </button>
+                  <p><a href="#" v-if="event.user_event_by_user.confirmation_status !== 'attended'" v-on:click="checkIn(event.user_event_by_user.id)" class="btn btn-primary" role="button">Check In!</a> 
 
-                  <div v-if="event.user_event_by_user.distance_between">
-                    <button class="btn btn-block btn-warning" v-on:click="checkIn(event.user_event_by_user.id)">Check In!</button> 
-                  </div>
+                    <a href="#" v-on:click="removeInterest(event.user_event_by_user.id)" class="btn btn-danger" role="button">Remove Interest</a></p>
+
+                    <p v-if="event.user_event_by_user.confirmation_status === 'attended'">You're checked in!</p>
+                    <p v-else-if="confirmAttended === true">You've checked in successfully!</p>
+
+                    <p v-else-if="event.user_event_by_user.distance_between">You can check into the event</p>
+                    <p v-else>Sorry, you're not within check-in range.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <div v-if="!event.user_event_by_user">
+              <form v-on:submit.prevent="submit_interest()">
+
+               <div class="form-group">
+                  <label class="display-label">Have you purchased tickets? </label> 
+                <select class="form-control" v-model="newConfirmationStatus">
+                  <option value="not_purchased"> Not Purchased</option>
+                  <option value="purchased">Purchased</option>
+                </select>
+              </div>
+                <input type="submit" class="btn btn-primary" value="I'm interested!">
+              </form>
+            </div>
+
+
+                <div id="group-remove-interest" v-if="event.user_event_by_user">
 
                   <ul>
                     <li v-for="error in errors">{{ error }}</li>
                   </ul>
 
                   <p>
-                    <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    <button class="btn btn-block btn-primary create-group" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                       Create a Group!
                     </button>
                   </p>
@@ -68,11 +79,11 @@
                     <div class="card card-body">
                       <form v-on:submit.prevent="submit()">
 
-                      <p style="font-weight: bold;">Label: <input class="form-control" type="text" v-model="newGroupLabel"></p>
-                      <p style="font-weight: bold;">Size: <input class="form-control" type="number" v-model="newGroupSize"></p>
+                      <p class="display-label" style="font-weight: bold;">Label: <input class="form-control" type="text" v-model="newGroupLabel"></p>
+                      <p class="display-label" style="font-weight: bold;">Size: <input class="form-control" type="number" v-model="newGroupSize"></p>
 
                        <div class="form-group">
-                          <label>Meet Before Options: </label> 
+                          <label class="display-label">Meet Before Options: </label> 
                         <select class="form-control" v-model="newGroupMeetBefore" name="meet_before">
                           <option value="drinks">Drinks</option>
                           <option value="dinner">Dinner</option>
@@ -81,7 +92,7 @@
                       </div>
 
                        <p class="form-group">
-                          <label>Drink Level: </label> 
+                          <label class="display-label">Drink Level: </label> 
                         <select class="form-control" v-model="newGroupDrinkLevel" name="drink_level">
                           <option value="sober">Sober</option>
                           <option value="one_to_two">One to Two</option>
@@ -95,17 +106,16 @@
                 </div>
               </div>
               <div class="separator"></div>
-             
-
+            
 
 
             <div v-if="event.user_event_by_user">
               <div v-for="group in event.groups">
                 <div v-if="(group.open === true) || (user_id == group.creater_id) || (group.requested) && (group.requested.confirmed === 'confirmed')">
                   <div class="row">
-                      <div class="thumbnail">
+                    <div class="thumbnail">
                         <div class="caption text-center">
-                          <router-link :to="'/groups/' + group.id"><h3 class="group-name">{{ group.label }}</h3>
+                          <router-link :to="'/groups/' + group.id"><h2 class="group-name">{{ group.label }}</h2>
                           </router-link>
                           <p>Group Capacity: {{ group.formatted.size }} </p>
                           <p>Meet Before?: {{ group.formatted.meet_before }}</p>
@@ -129,16 +139,39 @@
 </template>
 
 <style>
+
+  .display-label {
+    color: white;
+    font-size: 15px;
+  }
+
+  .create-group {
+    display: inline-block;
+  }
+
+  #group-remove-interest {
+    text-align: center;
+  }
+
   .events-show {
     color: black;
   }
 
   h2.group-name {
-    color: black;
+    color: white;
   }
 
   h2.group-name:hover {
     color: blue;
+  }
+
+  .btn-block {
+    margin: 10px;
+  }
+
+  .col-right {
+    padding-left: 120px;
+    padding-top: 20px;
   }
 
 </style>
@@ -215,6 +248,7 @@ export default {
       newConfirmationStatus: "",
       newSeatingQuality: "",
       user_id: "",
+      confirmAttended: false,
       errors: []
 
     };
@@ -223,6 +257,7 @@ export default {
       this.user_id = localStorage.getItem("user_id");
       axios.get("/api/events/" + this.$route.params.id)
       .then(response => {
+      console.log(response.data);
       this.event = response.data;
     });
 
@@ -269,6 +304,7 @@ export default {
             .then(response => {
               this.event.user_event_by_user = response.data;
 
+
             }).catch(error => {
               this.errors = error.response.data.errors;
             });
@@ -285,6 +321,10 @@ export default {
             });
         },
 
+        successfulCheckIn: function() {
+
+        },
+
         currentCapacity: function(input) {
           console.log(input);
           return math.subtract(math.fraction('1'), math.fraction(input))
@@ -299,6 +339,9 @@ export default {
             axios.patch("/api/user_events/" + inputUserEvent, params)
               .then(response => {
                 console.log(response.data);
+                if (response.data.confirmation_status === "attended") {
+                  this.confirmAttended = true;
+                }
               }).catch(error => {
                 this.errors = error.response.data.errors;
             });
