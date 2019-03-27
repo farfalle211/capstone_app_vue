@@ -36,6 +36,7 @@
           <p>Meeting Before For: {{ group.formatted.meet_before }}</p>
           <p>Drink Level: {{ group.formatted.drink_level }}</p>
 
+
           <div v-if="group.creater_id == user_id">
             <p>
               <button class="btn btn-block btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -111,9 +112,9 @@
           </div><br>
          
           <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
-            <h5>Group's Current Users: </h5> 
+            <h2>Group Members: </h2> 
             <ol>
-              <li>
+              <li class="li-styling">
                 <router-link :to="'/users/' + group.creater_id">
                {{ group.creater.name }},
                {{ group.creater.age }},
@@ -123,7 +124,7 @@
              </li>
            
              <div v-for="request in group.requests">
-               <li v-if="request.confirmed === 'confirmed'">
+               <li class="li-styling" v-if="request.confirmed === 'confirmed'">
                 <router-link :to="'/users/' + request.user.id">
                    {{ request.user.name }},
                    {{ request.user.age }},
@@ -136,6 +137,7 @@
              </div>  
              </ol>
           </div>
+          <div class="separator"></div>
 
           <div v-if="(group.creater_id == user_id) || (group.requested && group.requested.confirmed === 'confirmed')">
             
@@ -153,10 +155,9 @@
               <div>
                 <div style="padding-bottom: 10px; display:inline;">
                 Running: <input style="color: black;" type="number" v-model="numberOfMinutes"> Minutes Late!
-                </div>
-
-                <div style="padding-bottom: 10px">
-                <button class="btn btn-primary" v-on:click="imLate()">Send!</button>
+                <span> 
+                  <button style="margin-left: 15px;" class="btn btn-primary" v-on:click="imLate()">Send!</button>
+                </span>
                 </div>
               </div>
             </div>
@@ -196,6 +197,10 @@
 <style>
   button {
     color: black;
+  }
+
+  .li-styling {
+    font-size: 20px;
   }
 
 

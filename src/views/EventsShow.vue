@@ -35,7 +35,7 @@
 
                 <div v-if="event.user_event_by_user">
 
-                  <p><a href="#" v-if="event.user_event_by_user.confirmation_status !== 'attended'" v-on:click="checkIn(event.user_event_by_user.id)" class="btn btn-primary" role="button">Check In!</a> 
+                  <p><a href="#" v-if="event.user_event_by_user.confirmation_status !== 'attended'" v-on:click="checkIn(event.user_event_by_user.id)" class="btn btn-primary" style="margin-right: 15px;" role="button">Check In!</a> 
 
                     <a href="#" v-on:click="removeInterest(event.user_event_by_user.id)" class="btn btn-danger" role="button">Remove Interest</a></p>
 
@@ -120,7 +120,7 @@
                           <p>Group Capacity: {{ group.formatted.size }} </p>
                           <p>Meet Before?: {{ group.formatted.meet_before }}</p>
                           <p>Drink Amount: {{ group.formatted.drink_level }}</p>
-                          <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                          <p><a href="#" class="btn btn-primary" style="margin-right: 15px" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
                         </div>
                       </div>
                     </div>
