@@ -78,28 +78,35 @@
                     <div class="card card-body">
                       <form v-on:submit.prevent="submit()">
 
-                      <p class="display-label" style="font-weight: bold;">Label: <input class="form-control" type="text" v-model="newGroupLabel"></p>
-                      <p class="display-label" style="font-weight: bold;">Size: <input class="form-control" type="number" v-model="newGroupSize"></p>
+                        <div class="form-group center-block group-new-form">
+                          <label class="display-label" >Label: </label>
+                          <input class="form-control center-block" type="text" v-model="newGroupLabel">
+                        </div>
 
-                       <div class="form-group">
+                        <div class="form-group center-block group-new-form">
+                          <label class="display-label" >Size: </label>
+                          <input class="form-control center-block" type="number" v-model="newGroupSize">
+                        </div>
+
+                       <div class="form-group center-block group-new-form">
                           <label class="display-label">Meet Before Options: </label> 
-                        <select class="form-control" v-model="newGroupMeetBefore" name="meet_before">
+                        <select class="form-control center-block" v-model="newGroupMeetBefore" name="meet_before">
                           <option value="drinks">Drinks</option>
                           <option value="dinner">Dinner</option>
                           <option value="dinner_and_drinks">Dinner and Drinks</option>
                         </select>
                       </div>
 
-                       <p class="form-group">
+                       <p class="form-group center-block group-new-form">
                           <label class="display-label">Drink Level: </label> 
-                        <select class="form-control" v-model="newGroupDrinkLevel" name="drink_level">
+                        <select class="form-control center-block" v-model="newGroupDrinkLevel" name="drink_level">
                           <option value="sober">Sober</option>
                           <option value="one_to_two">One to Two</option>
                           <option value="three_or_more">Three or more</option>
                         </select>
                       </p>
 
-                      <input type="submit" data-target="#collapseExample" value="Create Group" class="btn btn-block btn-primary">
+                      <input type="submit" data-target="#collapseExample" value="Create Group" class="btn btn-block btn-primary create-group">
                     </form>
                   </div>
                 </div>
@@ -119,7 +126,19 @@
                           <p>Group Capacity: {{ group.formatted.size }} </p>
                           <p>Meet Before?: {{ group.formatted.meet_before }}</p>
                           <p>Drink Amount: {{ group.formatted.drink_level }}</p>
-                          <p><a href="#" class="btn btn-primary" style="margin-right: 15px" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+                          <p>
+                            <div v-if="!group.requested && (group.creater_id != user_id) && group.open === true">
+                              <a href="#" class="btn btn-primary" v-on:click="createRequest(group)" style="margin-right: 15px" role="button">Request to Join Group</a>
+                            </div> 
+                            <div v-if="(group.creater_id != user_id) && group.requested">
+                              <div v-if="(group.requested && group.requested.confirmed === 'confirmed')">
+                                <button v-on:click="destroyRequest(group)" class="btn btn-danger">Leave Group</button>
+                              </div>
+                            <div v-else>
+                              <button v-on:click="destroyRequest(group)" class="btn btn-danger">Delete Join Request</button>
+                            </div>
+                            </div>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -168,6 +187,13 @@
     margin: 10px;
   }
 
+  .group-new-form {
+    width: 500px;
+  }
+
+  .group-new-form .form-control {
+    width: 400px;
+  }
 </style>
 
 <script>
@@ -315,8 +341,28 @@ export default {
             });
         },
 
-        successfulCheckIn: function() {
+        createRequest: function(group) {
+            var params = {
+                          group_id: group.id
+                          };
 
+            axios.post("/api/requests/", params)
+            .then(response => {
+              console.log(response.data);
+             group.requested = response.data;
+            });
+        },
+
+        destroyRequest: function(group) {
+          axios.delete("/api/requests/" + group.requested.id)
+            .then(response => {
+              console.log("Success", response.data);
+              group.requested = "";
+              axios.get("/api/events/" + this.$route.params.id)
+              .then(response => {
+                this.event = response.data;
+              });
+            });
         },
 
         currentCapacity: function(input) {
