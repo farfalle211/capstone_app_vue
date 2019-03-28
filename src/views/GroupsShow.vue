@@ -134,6 +134,7 @@
                           <th class="text-center">Age</th>
                           <th class="text-center">Location</th>
                           <th class="text-center">Phone Number</th>
+                          <th class="text-center">Remove User</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -142,6 +143,7 @@
                           <td>{{group.creater.age}}</td>
                           <td>{{group.creater.location}}</td>
                           <td>{{group.creater.phone_number}}</td>
+                          <td></td>
                         </tr>
                         <tr v-for="request in group.requests" v-if="request.confirmed === 'confirmed'">
                           <td><router-link :to="'/users/' + request.user.id">{{request.user.name}}</router-link></td>
