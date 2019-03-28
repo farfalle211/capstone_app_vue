@@ -61,10 +61,10 @@
                       <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         Edit Your Group!
                       </button>
-                      <button class="btn btn-info" style="margin-left: 70px" type="button" data-toggle="collapse" data-target="#collapseRequest" aria-expanded="false" aria-controls="collapseExample">
+                      <button class="btn btn-info" style="margin-left: 20px" type="button" data-toggle="collapse" data-target="#collapseRequest" aria-expanded="false" aria-controls="collapseExample">
                         User Requests
                       </button>
-                      <a href="#" v-on:click="popUp()" style="margin-left: 70px" class="btn btn-danger" role="button">Delete Group</a>
+                      <a href="#" v-on:click="popUp()" style="margin-left: 20px" class="btn btn-danger" role="button">Delete Group</a>
                     </p>
                     <div class="collapse" id="collapseExample">
                       <div class="card card-body">
@@ -134,7 +134,7 @@
                           <th class="text-center">Age</th>
                           <th class="text-center">Location</th>
                           <th class="text-center">Phone Number</th>
-                          <th class="text-center">Remove User</th>
+                          <th v-if="(group.creater_id == user_id)" class="text-center">Remove User</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -143,7 +143,7 @@
                           <td>{{group.creater.age}}</td>
                           <td>{{group.creater.location}}</td>
                           <td>{{group.creater.phone_number}}</td>
-                          <td></td>
+                          <td v-if="(group.creater_id == user_id)"></td>
                         </tr>
                         <tr v-for="request in group.requests" v-if="request.confirmed === 'confirmed'">
                           <td><router-link :to="'/users/' + request.user.id">{{request.user.name}}</router-link></td>
