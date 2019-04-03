@@ -61,10 +61,10 @@
                       <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         Edit Your Group!
                       </button>
-                      <button class="btn btn-info" style="margin-left: 20px" type="button" data-toggle="collapse" data-target="#collapseRequest" aria-expanded="false" aria-controls="collapseExample">
+                      <button class="btn btn-info" style="margin-left: 10px" type="button" data-toggle="collapse" data-target="#collapseRequest" aria-expanded="false" aria-controls="collapseExample">
                         User Requests
                       </button>
-                      <a href="#" v-on:click="popUp()" style="margin-left: 20px" class="btn btn-danger" role="button">Delete Group</a>
+                      <a href="#" v-on:click="popUp()" style="margin-left: 10px" class="btn btn-danger" role="button">Delete Group</a>
                     </p>
                     <div class="collapse" id="collapseExample">
                       <div class="card card-body">
