@@ -30,7 +30,7 @@
           <div class="row">
             <div class="col-md-4">
               <div class="thumbnail row">
-                <img class="img-circle" :src="user.image_url" alt="">
+                <img class="img-circle" :src="user.image" alt="">
                 <div class="caption">
                   <h3>{{ user.name }}, {{ user.age }}, {{ user.location }}</h3>
                   <p>{{ user.summary }}</p>
@@ -80,8 +80,13 @@
 
                           <div class="form-group">
                               <label class="sr-only">Image</label>
-                              <input type="file" v-on:change="setFile($event)" ref="fileInput">
+                              <input type="text" class="form-control" placeholder="Image Url" v-model="user.image" required="">
                           </div>
+
+                          <!-- <div class="form-group">
+                              <label class="sr-only">Image</label>
+                              <input type="file" v-on:change="setFile($event)" ref="fileInput">
+                          </div> -->
 
                           <input type="submit" value="Update" class="btn btn-block btn-primary">
 
@@ -195,6 +200,7 @@ export default {
               summary: "",
               location: "",
               phone_number: "",
+              image: "",
               user_events:  [
                             {
                             id: "",
@@ -346,14 +352,15 @@ export default {
          params.append("gender", this.user.gender);
          params.append("location", this.user.location);
          params.append("phone_number", this.user.phone_number);
-         if (this.user.image) {
-           params.append("image", this.user.image);
-         }
+         // if (this.user.image) {
+         //   params.append("image", this.user.image);
+         // }
+         params.append("image", this.user.image);
 
         axios.patch("/api/users/" + this.user.id, params)
           .then(response => {
             this.user = response.data;
-            this.$refs.fileInput.value = "";
+            // this.$refs.fileInput.value = "";
           }).catch(error => {
             this.errors = error.response.data.errors;
           });

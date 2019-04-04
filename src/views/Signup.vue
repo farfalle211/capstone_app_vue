@@ -73,8 +73,13 @@
                   </div>
 
                   <div class="form-group">
-                      <input type="file" v-on:change="setFile($event)" ref="fileInput">
+                      <label class="sr-only">Image</label>
+                      <input class="form-control" v-model="userNewImage" placeholder="Image Url">
                   </div>
+
+                  <!-- <div class="form-group">
+                      <input type="file" v-on:change="setFile($event)" ref="fileInput">
+                  </div> -->
 
                   <div class="text-center">
                       <button type="submit" class="btn btn-block btn-main">Submit</button>
@@ -131,7 +136,7 @@ export default {
         .post("/api/users", params)
         .then(response => {
           this.$router.push("/login");
-          this.$refs.fileInput.value = "";
+          // this.$refs.fileInput.value = "";
         })
         .catch(error => {
           this.errors = error.response.data.errors;

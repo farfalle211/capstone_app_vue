@@ -11,7 +11,7 @@ import exportDataInit from 'highcharts/modules/export-data'
 
 
 axios.defaults.baseURL = 
-  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://dessailly-attend-app.herokuapp.com";
+  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "/";
 
 // HighchartsInit(Highcharts);
 exportingInit(Highcharts);
